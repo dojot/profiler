@@ -11,18 +11,13 @@ import fileupload from "express-fileupload";
 import expressValidator from "express-validator";
 import { SESSION_SECRET } from "./util/secrets";
 
-// Load environment variables from .env file, where API keys and passwords are configured
 dotenv.config({ path: ".env.example" });
 
-// Controllers (route handlers)
 import * as homeController from "./controllers/home";
 import * as uploadController from "./controllers/upload";
 
-// Create Express server
 const app = express();
 
-
-// Express configuration
 app.set("port", process.env.PORT || 3000);
 app.set("views", path.join(__dirname, "../views"));
 app.engine("ejs", ejs.renderFile);
