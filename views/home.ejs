@@ -58,7 +58,7 @@
 
     <div class="d-flex justify-content-center">
         <div style="position: relative; height:40vh; width:60vw">
-            <canvas id="myChart"></canvas>
+            <canvas id="delay-chart"></canvas>
         </div>
     </div>
     
@@ -68,8 +68,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js" integrity="sha256-o8aByMEvaNTcBsw94EfRLbBrJBI+c3mjna/j4LrfyJ8=" crossorigin="anonymous"></script>
 
     <script>
-        var ctx = document.getElementById("myChart").getContext('2d');
-        var barChart = new Chart(ctx, {
+        var ctx = document.getElementById("delay-chart").getContext('2d');
+        var delayChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: <%- JSON.stringify(labels); %>,
@@ -103,7 +103,7 @@
                 body: formData
             }).then( response => { 
                 response.json().then( data => {
-                    updateChart(barChart, data.labels, data.data);
+                    updateChart(delayChart, data.device_ids, data.delays);
                     updateDelay(data.delay_avarage);
                     updateDerivation(data.standard_derivation);
                     updateOutOfOrderMessages(data.out_of_order_messages);
