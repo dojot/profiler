@@ -1,4 +1,4 @@
-import { throws } from "assert";
+import * as _ from 'lodash';
 
 class Message{
 
@@ -43,11 +43,16 @@ class Message{
             throw new TypeError("Message doens't have enough data");
         }
 
-        let deviceTime = new Date(Number(row[0]));
-        let moscaTime = new Date(Number(row[1]));
-        let socketTime = new Date(Number(row[2]));
-        let order = Number(row[3]);
-        return new Message(deviceTime, moscaTime, socketTime, order);
+        try {
+            let deviceTime = new Date(Number(row[0]));
+            let moscaTime = new Date(Number(row[1]));
+            let socketTime = new Date(Number(row[2]));
+            let order = Number(row[3]);
+            return new Message(deviceTime, moscaTime, socketTime, order);
+        } catch (error) {
+            throw new TypeError("Message data is not valid");
+        }
+        
     }
 
 }

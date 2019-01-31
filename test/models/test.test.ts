@@ -32,8 +32,16 @@ describe("Test class", () => {
   });
 
   it("should calculate the avarage when there are not messages", () => {
-    expect(() => test.delayAvarage).to.throw(TypeError);
-    
+    expect(() => test.delayAvarage).to.throw(TypeError);    
+  });
+
+  it("should calculate the avarage when there are messages with zero delay", () => {
+    test.addMessage(new MessageMock(0));
+    test.addMessage(new MessageMock(0));
+    test.addMessage(new MessageMock(0));
+    test.addMessage(new MessageMock(0));
+
+    expect(test.delayAvarage).to.equal(0);
   });
 
   it("should calculate the standard derivation", () => {
@@ -43,6 +51,19 @@ describe("Test class", () => {
     test.addMessage(new MessageMock(1));
 
     expect(test.standardDerivation).to.equal(1.87);
+  });
+
+  it("should calculate the standard derivation when there are messages with zero delay", () => {
+    test.addMessage(new MessageMock(0));
+    test.addMessage(new MessageMock(0));
+    test.addMessage(new MessageMock(0));
+    test.addMessage(new MessageMock(0));
+
+    expect(test.standardDerivation).to.equal(0);
+  });
+
+  it("should calculate the standard derivation when there are not messages", () => {
+    expect(() => test.standardDerivation).to.throw(TypeError); 
   });
 
 });
