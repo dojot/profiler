@@ -44,12 +44,24 @@ class Message{
         return this._deviceTime;
     }
 
+    get deviceTimestamp(): number{
+        return this._deviceTime.getTime();
+    }
+
     get moscaTime(): Date{
         return this._moscaTime;
     }
 
+    get moscaTimestamp(): number{
+        return this._deviceTime.getTime();
+    }
+
     get socketTime(): Date{
         return this._socketTime;
+    }
+
+    get socketTimestamp(): number{
+        return this._socketTime.getTime();
     }
 
     get order(): Number{

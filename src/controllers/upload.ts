@@ -35,7 +35,8 @@ export let create = (req: Request, res: Response) => {
             labels: test.messages.map(message => message.order.toString()),
             data: test.messages.map(message => message.delay),
             delay_avarage: test.delayAvarage,
-            standard_derivation: test.standardDerivation
+            standard_derivation: test.standardDerivation,
+            out_of_order_messages: test.outOfOrderMessages
         });
       });
     

@@ -28,7 +28,7 @@
             <div class="card text-white bg-success mx-sm-1 p-3">
                 <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
                 <div class="text-white text-center mt-3"><h4>Mensagens fora de ordem</h4></div>
-                <div class="text-white text-center mt-2"><h1>vazio</h1></div>
+                <div class="text-white text-center mt-2"><h1 id="out-of-order-messages">vazio</h1></div>
             </div>
         </div>
     </div>
@@ -84,6 +84,7 @@
                 response.json().then( data => {
                     updateChart(barChart, data.labels, data.data);
                     updateDelay(data.delay_avarage, data.standard_derivation);
+                    updateOutOfOrderMessages(data.out_of_order_messages);
                 });     
             }).then(
                 success => console.log(success) 
@@ -103,6 +104,10 @@
 
         const updateDelay = (delay, desvio) => {
             document.getElementById('delay').innerHTML = `${delay} / ${desvio}`;
+        }
+
+        const updateOutOfOrderMessages = (total) => {
+            document.getElementById('out-of-order-messages').innerHTML = total;
         }
     
 

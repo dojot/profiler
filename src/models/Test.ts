@@ -37,6 +37,25 @@ class Test{
         return _.round(Math.sqrt(derivationAvarage), 2);
     }
 
+    get outOfOrderMessages(){
+        let total = 0;
+        let devicesTime = this.messages.map( m => m.deviceTimestamp );
+        let devicesTimeOrdered = this.messages.map( m => m.deviceTimestamp ).sort();
+
+        this.messages.forEach(message => {
+            let deviceTimeIndex = devicesTime.indexOf(message.deviceTimestamp);
+            let deviceTimeOrderedIndex = devicesTimeOrdered.indexOf(message.deviceTimestamp);
+
+            console.log(deviceTimeIndex + ' - ' + deviceTimeOrderedIndex);
+
+            if(deviceTimeIndex != deviceTimeOrderedIndex){
+                total += 1;
+            }
+        });
+
+        return total;
+    }
+
 }
 
 export { Test }
