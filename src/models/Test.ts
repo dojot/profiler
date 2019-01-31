@@ -46,8 +46,6 @@ class Test{
             let deviceTimeIndex = devicesTime.indexOf(message.deviceTimestamp);
             let deviceTimeOrderedIndex = devicesTimeOrdered.indexOf(message.deviceTimestamp);
 
-            console.log(deviceTimeIndex + ' - ' + deviceTimeOrderedIndex);
-
             if(deviceTimeIndex != deviceTimeOrderedIndex){
                 total += 1;
             }
