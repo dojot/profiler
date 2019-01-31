@@ -17,18 +17,39 @@
     <br><br>
 
     <div class="row w-100">
-        <div class="col-md-3 offset-md-3">
+        <div class="col-md-2 offset-md-1">
             <div class="card text-white bg-primary mx-sm-1 p-3">
                 <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                <div class="text-white text-center mt-3"><h4>Delay médio / desvio</h4></div>
+                <div class="text-white text-center mt-3"><h4>Mensagens enviadas</h4></div>
+                <div class="text-white text-center mt-2"><h1 id="sent-messages">vazio</h1></div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-white bg-info mx-sm-1 p-3">
+                <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
+                <div class="text-white text-center mt-3"><h4>Mensagens recebidas</h4></div>
+                <div class="text-white text-center mt-2"><h1 id="received-messages">vazio</h1></div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-white bg-success mx-sm-1 p-3">
+                <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
+                <div class="text-white text-center mt-3"><h4>Fora de ordem</h4></div>
+                <div class="text-white text-center mt-2"><h1 id="out-of-order-messages">vazio</h1></div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-white bg-warning mx-sm-1 p-3">
+                <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
+                <div class="text-white text-center mt-3"><h4>Delay médio</h4></div>
                 <div class="text-white text-center mt-2"><h1 id="delay">vazio</h1></div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-success mx-sm-1 p-3">
-                <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                <div class="text-white text-center mt-3"><h4>Mensagens fora de ordem</h4></div>
-                <div class="text-white text-center mt-2"><h1 id="out-of-order-messages">vazio</h1></div>
+        <div class="col-md-2">
+            <div class="card text-white bg-danger mx-sm-1 p-3">
+                <div class="text-white bg-danger"><span class="fa fa-eye"></span></div>
+                <div class="text-white text-center mt-3"><h4>Desvio do delay</h4></div>
+                <div class="text-white text-center mt-2"><h1 id="derivation">vazio</h1></div>
             </div>
         </div>
     </div>
@@ -83,8 +104,11 @@
             }).then( response => { 
                 response.json().then( data => {
                     updateChart(barChart, data.labels, data.data);
-                    updateDelay(data.delay_avarage, data.standard_derivation);
+                    updateDelay(data.delay_avarage);
+                    updateDerivation(data.standard_derivation);
                     updateOutOfOrderMessages(data.out_of_order_messages);
+                    updateSentMessages(data.total_sent_messages);
+                    updateReceivedMessages(data.total_received_messages);
                 });     
             }).then(
                 success => console.log(success) 
@@ -102,12 +126,24 @@
             chart.update();
         }
 
-        const updateDelay = (delay, desvio) => {
-            document.getElementById('delay').innerHTML = `${delay} / ${desvio}`;
+        const updateDelay = (delay) => {
+            document.getElementById('delay').innerHTML = delay;
+        }
+
+        const updateDerivation = (derivation) => {
+            document.getElementById('derivation').innerHTML = derivation;
         }
 
         const updateOutOfOrderMessages = (total) => {
             document.getElementById('out-of-order-messages').innerHTML = total;
+        }
+
+        const updateSentMessages = (total) => {
+            document.getElementById('sent-messages').innerHTML = total;
+        }
+
+        const updateReceivedMessages = (total) => {
+            document.getElementById('received-messages').innerHTML = total;
         }
     
 

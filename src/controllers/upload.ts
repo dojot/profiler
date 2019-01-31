@@ -31,12 +31,15 @@ export let create = (req: Request, res: Response) => {
       });
 
       rd.on('close', () => {
+        console.log(test.totalSentMessages);
         res.json({
-            labels: test.messages.map(message => message.order.toString()),
+            labels: test.messages.map(message => message.deviceTimestamp.toString()),
             data: test.messages.map(message => message.delay),
             delay_avarage: test.delayAvarage,
             standard_derivation: test.standardDerivation,
-            out_of_order_messages: test.outOfOrderMessages
+            out_of_order_messages: test.outOfOrderMessages,
+            total_received_messages: test.totalMessages,
+            total_sent_messages: test.totalSentMessages
         });
       });
     

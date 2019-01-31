@@ -54,6 +54,10 @@ class Test{
         return total;
     }
 
+    get totalSentMessages(): number{
+        return this.messages[0].totalSentMessages;
+    }
+
 }
 
 export { Test }

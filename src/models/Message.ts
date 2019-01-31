@@ -5,7 +5,7 @@ class Message{
     private _deviceTime: Date;
     private _moscaTime: Date;
     private _socketTime: Date;
-    private _order: Number;
+    private _totalSentMessages: number;
 
     private constructor(){}
 
@@ -33,9 +33,9 @@ class Message{
         }
     }
 
-    setOrder(data:string){
-        this._order = _.toNumber(data);
-        if(!_.isNumber(this._order) || _.isEmpty(data)){
+    setTotalSentMessages(data:string){
+        this._totalSentMessages = _.toNumber(data);
+        if(!_.isNumber(this._totalSentMessages) || _.isEmpty(data)){
             throw new TypeError("Order is not valid");
         }
     }
@@ -64,8 +64,8 @@ class Message{
         return this._socketTime.getTime();
     }
 
-    get order(): Number{
-        return this._order;
+    get totalSentMessages(): number{
+        return this._totalSentMessages;
     }
 
     get delay(){
@@ -97,7 +97,7 @@ class Message{
         message.setDeviceTime(row[0]);
         message.setMoscaTime(row[1]);
         message.setSocketTime(row[2]);
-        message.setOrder(row[3]);
+        message.setTotalSentMessages(row[3]);
 
         return message;
     }
