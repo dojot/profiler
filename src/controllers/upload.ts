@@ -27,7 +27,7 @@ export let create = (req: Request, res: Response) => {
       var report = new Report();
 
       rd.on('line', line =>  {
-          report.addMessage(new Message(line));
+          report.addMessage(Message.instance(line));
       });
 
       rd.on('close', () => {

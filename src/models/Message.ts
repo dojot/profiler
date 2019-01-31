@@ -1,3 +1,5 @@
+import { throws } from "assert";
+
 class Message{
 
     private _deviceTime: Date;
@@ -5,12 +7,11 @@ class Message{
     private _socketTime: Date;
     private _order: Number;
 
-    constructor(data: string){
-        var row = data.split(';');
-        this._deviceTime = new Date(Number(row[0]));
-        this._moscaTime = new Date(Number(row[1]));
-        this._socketTime = new Date(Number(row[2]));
-        this._order = Number(row[3]);
+    constructor(deviceTime: Date, moscaTime: Date, socketTime: Date, order: Number){
+        this._deviceTime = deviceTime;
+        this._moscaTime = moscaTime;
+        this._socketTime = socketTime;
+        this._order = order;
     }
 
     public deviceTime(): Date{
@@ -31,6 +32,22 @@ class Message{
 
     public get delay(){
         return this.socketTime().getTime() - this.deviceTime().getTime(); 
+    }
+
+    public static instance(data: String): Message{
+        if(data == null || data.length == 0){
+            throw new TypeError("Data can't be empty");
+        }
+        var row = data.split(';');
+        if(row.length < 3){
+            throw new TypeError("Message doens't have enough data");
+        }
+
+        let deviceTime = new Date(Number(row[0]));
+        let moscaTime = new Date(Number(row[1]));
+        let socketTime = new Date(Number(row[2]));
+        let order = Number(row[3]);
+        return new Message(deviceTime, moscaTime, socketTime, order);
     }
 
 }
