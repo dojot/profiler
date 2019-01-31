@@ -30,8 +30,8 @@ export let create = (req: Request, res: Response) => {
 
       rd.on('close', () => {
         res.json({
-            labels: test.messages.map(message => message.deviceTimestamp.toString()),
-            data: test.messages.map(message => message.delay),
+            device_ids: test.messages.map(message => message.deviceTimestamp.toString()),
+            delays: test.messages.map(message => message.delay),
             delay_avarage: test.delayAvarage,
             standard_derivation: test.standardDerivation,
             out_of_order_messages: test.outOfOrderMessages,
