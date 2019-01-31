@@ -7,31 +7,69 @@ class Message{
     private _socketTime: Date;
     private _order: Number;
 
-    constructor(deviceTime: Date, moscaTime: Date, socketTime: Date, order: Number){
-        this._deviceTime = deviceTime;
-        this._moscaTime = moscaTime;
-        this._socketTime = socketTime;
-        this._order = order;
+    private constructor(){}
+
+    setDeviceTime(data:string){
+        try {
+            this._deviceTime = this._convertDate(data);
+        } catch (error) {
+            throw new TypeError("Device time is not valid");
+        }
     }
 
-    public deviceTime(): Date{
+    setMoscaTime(data:string){
+        try {
+            this._moscaTime = this._convertDate(data);
+        } catch (error) {
+            throw new TypeError("Mosca time is not valid");
+        }
+    }
+
+    setSocketTime(data:string){
+        try {
+            this._socketTime = this._convertDate(data);
+        } catch (error) {
+            throw new TypeError("Socket time is not valid");
+        }
+    }
+
+    setOrder(data:string){
+        this._order = _.toNumber(data);
+        if(!_.isNumber(this._order) || _.isEmpty(data)){
+            throw new TypeError("Order is not valid");
+        }
+    }
+
+    get deviceTime(): Date{
         return this._deviceTime;
     }
 
-    public moscaTime(): Date{
+    get moscaTime(): Date{
         return this._moscaTime;
     }
 
-    public socketTime(): Date{
+    get socketTime(): Date{
         return this._socketTime;
     }
 
-    public get order(): Number{
+    get order(): Number{
         return this._order;
     }
 
-    public get delay(){
-        return this.socketTime().getTime() - this.deviceTime().getTime(); 
+    get delay(){
+        return this.socketTime.getTime() - this.deviceTime.getTime(); 
+    }
+
+    private _convertDate(data: string): Date{
+        let timestamp = _.toNumber(data);
+        if(_.isNaN(timestamp) || _.isEmpty(data)){
+            throw new TypeError("date is not valid");
+        }
+        let date = new Date(timestamp);
+        if(!_.isDate(date)){
+            throw new TypeError("date time is not valid");
+        }
+        return date;
     }
 
     public static instance(data: String): Message{
@@ -43,16 +81,13 @@ class Message{
             throw new TypeError("Message doens't have enough data");
         }
 
-        try {
-            let deviceTime = new Date(Number(row[0]));
-            let moscaTime = new Date(Number(row[1]));
-            let socketTime = new Date(Number(row[2]));
-            let order = Number(row[3]);
-            return new Message(deviceTime, moscaTime, socketTime, order);
-        } catch (error) {
-            throw new TypeError("Message data is not valid");
-        }
-        
+        let message = new Message();
+        message.setDeviceTime(row[0]);
+        message.setMoscaTime(row[1]);
+        message.setSocketTime(row[2]);
+        message.setOrder(row[3]);
+
+        return message;
     }
 
 }

@@ -6,12 +6,13 @@ const expect = chai.expect;
 
 describe("Message class", () => {
 
-  it("should instantiate when data is empty", () => {
-    expect(() => Message.instance("")).to.throw(TypeError);
-  });
-
   it("should instantiate when data is invalid", () => {
+    expect(() => Message.instance("")).to.throw(TypeError);
     expect(() => Message.instance("xxx")).to.throw(TypeError);
+    expect(() => Message.instance("null")).to.throw(TypeError);
+    expect(() => Message.instance("xxx;1548872097133;1548872098267;1")).to.throw(TypeError);
+    expect(() => Message.instance("null;1548872097133;1548872098267;1")).to.throw(TypeError);
+    expect(() => Message.instance(";1548872097133;1548872098267;1")).to.throw(TypeError);
   });
 
   it("should calculate delay", () => {
