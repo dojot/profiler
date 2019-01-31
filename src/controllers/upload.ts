@@ -9,10 +9,8 @@ export let create = (req: Request, res: Response) => {
     if (Object.keys(req.files).length == 0) {
         return res.status(400).send('No files were uploaded.');
     }
-    
-    const sampleFile = req.files.sampleFile;
 
-    sampleFile.mv('/tmp/upload.csv', (err: any) => {
+    req.files.sampleFile.mv('/tmp/upload.csv', (err: any) => {
         if (err) {
             console.log('Error while copying file to target location');
         }
@@ -31,7 +29,6 @@ export let create = (req: Request, res: Response) => {
       });
 
       rd.on('close', () => {
-        console.log(test.totalSentMessages);
         res.json({
             labels: test.messages.map(message => message.deviceTimestamp.toString()),
             data: test.messages.map(message => message.delay),

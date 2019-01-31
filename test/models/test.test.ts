@@ -96,4 +96,18 @@ describe("Test class", () => {
     expect(test.outOfOrderMessages).to.equal(2);
   });
 
+  it("should return the total sent messages", () => {
+
+    let MessageMock = jest.fn<Message>((total) => ({
+      totalSentMessages: total
+    }));
+
+    test.addMessage(new MessageMock(100));
+    test.addMessage(new MessageMock(100));
+    test.addMessage(new MessageMock(100));
+    test.addMessage(new MessageMock(100));
+
+    expect(test.totalSentMessages).to.equal(100);
+  });
+
 });
