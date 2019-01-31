@@ -39,7 +39,7 @@ class Message{
             throw new TypeError("Data can't be empty");
         }
         var row = data.split(';');
-        if(row.length < 3){
+        if(row.length < 4){
             throw new TypeError("Message doens't have enough data");
         }
 

@@ -12,7 +12,7 @@ export let index = (req: Request, res: Response) => {
 
   res.render("home", {
     title: "Home",
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-    data: [12, 15, 3, 5, 2, 3]
+    labels: [],
+    data: []
   });
 };

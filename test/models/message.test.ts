@@ -7,7 +7,7 @@ const expect = chai.expect;
 describe("Message class", () => {
 
   it("should calculate delay", () => {
-    let message = Message.instance("1548872097132;1548872097133;1548872098267;");
+    let message = Message.instance("1548872097132;1548872097133;1548872098267;1");
     expect(message.delay).to.equal(1135);
   });
 

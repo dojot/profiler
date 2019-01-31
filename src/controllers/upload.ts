@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Chart } from "../models/Chart";
-import { Report } from "../models/Report";
+import { Test } from "../models/Test";
 import { Message } from "../models/Message";
 import fs = require('fs');
 import readline = require('readline');
@@ -24,19 +24,19 @@ export let create = (req: Request, res: Response) => {
         terminal: false
       });
 
-      var report = new Report();
+      var test = new Test();
 
       rd.on('line', line =>  {
-          report.addMessage(Message.instance(line));
+          test.addMessage(Message.instance(line));
       });
 
       rd.on('close', () => {
-        let chart = new Chart();
-        chart.labels = report.messages.map(message => message.order.toString());
-        chart.data = report.messages.map(message => message.delay);
-    
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(chart));
+        res.json({
+            labels: test.messages.map(message => message.order.toString()),
+            data: test.messages.map(message => message.delay),
+            delay_avarage: test.delayAvarage,
+            standard_derivation: test.standardDerivation
+        });
       });
     
   

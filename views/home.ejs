@@ -12,7 +12,7 @@
   </head>
   <body>
     <input type="file" name="sampleFile" id="sampleFile" />
-    <input type='button' class="btn" value='Upload!' onclick="upload();" />
+    <input type='button' class="btn" value='Analisar!' onclick="upload();" />
 
     <br><br>
 
@@ -21,14 +21,14 @@
             <div class="card text-white bg-primary mx-sm-1 p-3">
                 <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
                 <div class="text-white text-center mt-3"><h4>Delay médio / desvio</h4></div>
-                <div class="text-white text-center mt-2"><h1 id="delay">9332 / 335</h1></div>
+                <div class="text-white text-center mt-2"><h1 id="delay">vazio</h1></div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-white bg-success mx-sm-1 p-3">
                 <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                <div class="text-white text-center mt-3"><h4>Tempo médio de envio</h4></div>
-                <div class="text-white text-center mt-2"><h1>9332</h1></div>
+                <div class="text-white text-center mt-3"><h4>Mensagens fora de ordem</h4></div>
+                <div class="text-white text-center mt-2"><h1>vazio</h1></div>
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@
             data: {
                 labels: <%- JSON.stringify(labels); %>,
                 datasets: [{
-                    label: 'Delay de Cada Mensagem',
+                    label: 'Delay das Mensagens',
                     data: <%- JSON.stringify(data); %>,
                     backgroundColor: 'rgba(0, 123, 255, 1)',
                     borderWidth: 1
@@ -83,7 +83,7 @@
             }).then( response => { 
                 response.json().then( data => {
                     updateChart(barChart, data.labels, data.data);
-                    updateDelay(500, 200);
+                    updateDelay(data.delay_avarage, data.standard_derivation);
                 });     
             }).then(
                 success => console.log(success) 
