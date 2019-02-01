@@ -15,13 +15,14 @@ dotenv.config({ path: ".env.example" });
 
 import * as homeController from "./controllers/home";
 import * as uploadController from "./controllers/upload";
+import * as testController from "./controllers/test";
 
 const app = express();
 
 app.set("port", process.env.PORT || 3000);
 app.set("views", path.join(__dirname, "../views"));
-app.engine("ejs", ejs.renderFile);
-app.set("view engine", "ejs");
+app.engine("html", ejs.renderFile);
+app.set("view engine", "html");
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -48,6 +49,6 @@ app.use(
 
 app.get("/", homeController.index);
 app.post("/upload", uploadController.create);
-
+app.post("/test", testController.create);
 
 export default app;

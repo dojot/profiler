@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
+    <title>Dojot</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="pos-f-t">
+        <div class="collapse" id="navbarToggleExternalContent">
+          <div class="bg-light p-4">
+            <h4>Run a New Test!</h4>
+            <span class="text-muted">Fill in the data for the new test</span>
+            <form class="form-inline">
+              <div class="form-group mb-2">
+                <label for="tenant" class="sr-only">Tenant</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="tenant"
+                  id="tenant"
+                  placeholder="Tenant"
+                />
+              </div>
+              <div class="form-group mb-2">
+                <label for="device" class="sr-only">Device</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="device"
+                  name="device"
+                  placeholder="Device"
+                />
+              </div>
+              <div class="form-group mb-2">
+                <label for="messages" class="sr-only">Messages</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="messages"
+                  name="messages"
+                  placeholder="Messages"
+                />
+              </div>
+              <div class="form-group mb-2">
+                <label for="per-second" class="sr-only">Per second</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="per-second"
+                  name="per-second"
+                  placeholder="Per second"
+                />
+              </div>
+              <button id="create-test-button" type="button" onclick="createTest();" class="btn btn-secundary mb-2">Go!</button>
+            </form>
+          </div>
+        </div>
+        <nav class="navbar navbar-light bg-light">
+          <button
+            id="navbar-button"
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarToggleExternalContent"
+            aria-controls="navbarToggleExternalContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="dropdown">
+            <button
+              class="btn btn-light dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Files for Viewing
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              
+              <a onclick="selectFile(this.innerHTML)" class="dropdown-item" href="#" v-for="file in files">
+                {{ file }}
+              </a>
+            
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <br /><br />
+
+      <div class="row w-100">
+        <div class="col-md-3 col-lg-2 offset-md-1">
+          <div class="card text-white bg-primary mx-sm-1 p-3">
+            <div class="text-white bg-primary">
+              <span class="fa fa-eye"></span>
+            </div>
+            <div class="text-white text-center mt-3">
+              <h4>Sent messages</h4>
+            </div>
+            <div class="text-white text-center mt-2">
+              <h1 id="sent-messages">{{ sent_messages }}</h1>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-lg-2">
+          <div class="card text-white bg-info mx-sm-1 p-3">
+            <div class="text-white bg-primary">
+              <span class="fa fa-eye"></span>
+            </div>
+            <div class="text-white text-center mt-3">
+              <h4>Received messages</h4>
+            </div>
+            <div class="text-white text-center mt-2">
+              <h1 id="received-messages">{{ received_messages }}</h1>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-lg-2">
+          <div class="card text-white bg-success mx-sm-1 p-3">
+            <div class="text-white bg-primary">
+              <span class="fa fa-eye"></span>
+            </div>
+            <div class="text-white text-center mt-3"><h4>Out of order</h4></div>
+            <div class="text-white text-center mt-2">
+              <h1 id="out-of-order-messages">{{ out_of_order_messages }}</h1>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-lg-2">
+          <div class="card text-white bg-warning mx-sm-1 p-3">
+            <div class="text-white bg-primary">
+              <span class="fa fa-eye"></span>
+            </div>
+            <div class="text-white text-center mt-3">
+              <h4>Delay avarage</h4>
+            </div>
+            <div class="text-white text-center mt-2">
+              <h1 id="delay">{{ delay_avarage }}</h1>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-lg-2">
+          <div class="card text-white bg-danger mx-sm-1 p-3">
+            <div class="text-white bg-danger">
+              <span class="fa fa-eye"></span>
+            </div>
+            <div class="text-white text-center mt-3">
+              <h4>Delay derivation</h4>
+            </div>
+            <div class="text-white text-center mt-2">
+              <h1 id="derivation">{{ standard_derivation }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br /><br /><br />
+
+      <div class="d-flex justify-content-center">
+        <div style="position: relative; height:40vh; width:60vw">
+          <canvas id="delay-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"
+      integrity="sha256-o8aByMEvaNTcBsw94EfRLbBrJBI+c3mjna/j4LrfyJ8="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <script>
+
+      var app = new Vue({
+        el: "#app",
+        data: {
+          files: [],
+          device_ids: [],
+          delays: [],
+          sent_messages: "--",
+          received_messages: "--",
+          delay_avarage: "--",
+          standard_derivation: "--",
+          out_of_order_messages: "--"
+        }
+      });
+
+      var ctx = document.getElementById("delay-chart").getContext("2d");
+      var delayChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: app.device_ids,
+          datasets: [
+            {
+              label: "Messages delay",
+              data: app.delays,
+              backgroundColor: "rgba(0, 123, 255, 1)",
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true
+                }
+              }
+            ]
+          }
+        }
+      });
+
+      const upload = () => {
+        const input = document.getElementById("sampleFile");
+
+        const formData = new FormData();
+        formData.append("sampleFile", input.files[0]);
+
+        fetch("/upload", {
+          method: "POST",
+          body: formData
+        })
+          .then(response => {
+            response.json().then(data => {
+              app.device_ids = data.device_ids;
+              app.delays = data.delays;
+              app.delay_avarage = data.delay_avarage;
+              app.standard_derivation = data.standard_derivation;
+              app.out_of_order_messages = data.out_of_order_messages;
+              app.sent_messages = data.total_sent_messages;
+              app.received_messages = data.total_received_messages;
+              updateChart(delayChart);
+            });
+          })
+          .then(success => console.log(success))
+          .catch(error => console.log(error));
+      };
+
+      const createTest = () => {
+        navButton = document.getElementById("navbar-button");
+        testButton = document.getElementById("create-test-button"); 
+        const tenant = document.getElementById("tenant").value;
+        const device = document.getElementById("device").value;
+        const messages = document.getElementById("messages").value;
+        const perSecond = document.getElementById("per-second").value;
+
+        const formData = new FormData();
+        formData.append("tenant", tenant);
+        formData.append("device", device);
+        formData.append("messages", messages);
+        formData.append("perSecond", perSecond);
+
+        testButton.innerHTML = "Creating test...";
+
+        fetch("/test", {
+          method: "POST",
+          body: formData
+        })
+          .then(response => {
+            response.json().then(data => {
+              app.files = data.files;
+              navButton.click();
+              testButton.innerHTML = "Go!";
+            });
+          })
+          .then(success => console.log(success))
+          .catch(error => console.log(error));
+      };
+
+      const updateChart = chart => {
+        chart.data.labels = app.device_ids;
+
+        chart.data.datasets.forEach(dataset => {
+          dataset.data = app.delays;
+        });
+        chart.update();
+      };
+
+      const selectFile = (value) => {
+        const formData = new FormData();
+        formData.append("fileName", value);
+
+        fetch("/upload", {
+          method: "POST",
+          body: formData
+        })
+          .then(response => {
+            response.json().then(data => {
+              app.device_ids = data.device_ids;
+              app.delays = data.delays;
+              app.delay_avarage = data.delay_avarage;
+              app.standard_derivation = data.standard_derivation;
+              app.out_of_order_messages = data.out_of_order_messages;
+              app.sent_messages = data.total_sent_messages;
+              app.received_messages = data.total_received_messages;
+              updateChart(delayChart);
+            });
+          })
+          .then(success => console.log(success))
+          .catch(error => console.log(error));
+      }
+    </script>
+  </body>
+</html>
