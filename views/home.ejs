@@ -9,56 +9,63 @@
 
     <title>Dojot</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+        
+    </script>
+
   </head>
   <body>
-    <input type="file" name="sampleFile" id="sampleFile" />
-    <input type='button' class="btn" value='Analisar!' onclick="upload();" />
+    <div id="app">
+        <input type="file" name="sampleFile" id="sampleFile" />
+        <input type='button' class="btn" value='Analisar!' onclick="upload();" />
 
-    <br><br>
+        <br><br>
 
-    <div class="row w-100">
-        <div class="col-md-3 col-lg-2 offset-md-1">
-            <div class="card text-white bg-primary mx-sm-1 p-3">
-                <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                <div class="text-white text-center mt-3"><h4>Mensagens enviadas</h4></div>
-                <div class="text-white text-center mt-2"><h1 id="sent-messages">vazio</h1></div>
+        <div class="row w-100">
+            <div class="col-md-3 col-lg-2 offset-md-1">
+                <div class="card text-white bg-primary mx-sm-1 p-3">
+                    <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
+                    <div class="text-white text-center mt-3"><h4>Mensagens enviadas</h4></div>
+                    <div class="text-white text-center mt-2"><h1 id="sent-messages">{{ sent_messages }}</h1></div>
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <div class="card text-white bg-info mx-sm-1 p-3">
+                    <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
+                    <div class="text-white text-center mt-3"><h4>Mensagens recebidas</h4></div>
+                    <div class="text-white text-center mt-2"><h1 id="received-messages">{{ received_messages }}</h1></div>
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <div class="card text-white bg-success mx-sm-1 p-3">
+                    <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
+                    <div class="text-white text-center mt-3"><h4>Fora de ordem</h4></div>
+                    <div class="text-white text-center mt-2"><h1 id="out-of-order-messages">{{ out_of_order_messages }}</h1></div>
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <div class="card text-white bg-warning mx-sm-1 p-3">
+                    <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
+                    <div class="text-white text-center mt-3"><h4>Delay médio</h4></div>
+                    <div class="text-white text-center mt-2"><h1 id="delay">{{ delay_avarage }}</h1></div>
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <div class="card text-white bg-danger mx-sm-1 p-3">
+                    <div class="text-white bg-danger"><span class="fa fa-eye"></span></div>
+                    <div class="text-white text-center mt-3"><h4>Desvio do delay</h4></div>
+                    <div class="text-white text-center mt-2"><h1 id="derivation">{{ standard_derivation }}</h1></div>
+                </div>
             </div>
         </div>
-        <div class="col-md-3 col-lg-2">
-            <div class="card text-white bg-info mx-sm-1 p-3">
-                <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                <div class="text-white text-center mt-3"><h4>Mensagens recebidas</h4></div>
-                <div class="text-white text-center mt-2"><h1 id="received-messages">vazio</h1></div>
-            </div>
-        </div>
-        <div class="col-md-3 col-lg-2">
-            <div class="card text-white bg-success mx-sm-1 p-3">
-                <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                <div class="text-white text-center mt-3"><h4>Fora de ordem</h4></div>
-                <div class="text-white text-center mt-2"><h1 id="out-of-order-messages">vazio</h1></div>
-            </div>
-        </div>
-        <div class="col-md-3 col-lg-2">
-            <div class="card text-white bg-warning mx-sm-1 p-3">
-                <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                <div class="text-white text-center mt-3"><h4>Delay médio</h4></div>
-                <div class="text-white text-center mt-2"><h1 id="delay">vazio</h1></div>
-            </div>
-        </div>
-        <div class="col-md-3 col-lg-2">
-            <div class="card text-white bg-danger mx-sm-1 p-3">
-                <div class="text-white bg-danger"><span class="fa fa-eye"></span></div>
-                <div class="text-white text-center mt-3"><h4>Desvio do delay</h4></div>
-                <div class="text-white text-center mt-2"><h1 id="derivation">vazio</h1></div>
-            </div>
-        </div>
-    </div>
 
-    <br><br><br>
+        <br><br><br>
 
-    <div class="d-flex justify-content-center">
-        <div style="position: relative; height:40vh; width:60vw">
-            <canvas id="delay-chart"></canvas>
+        <div class="d-flex justify-content-center">
+            <div style="position: relative; height:40vh; width:60vw">
+                <canvas id="delay-chart"></canvas>
+            </div>
         </div>
     </div>
     
@@ -66,16 +73,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js" integrity="sha256-o8aByMEvaNTcBsw94EfRLbBrJBI+c3mjna/j4LrfyJ8=" crossorigin="anonymous"></script>
-
     <script>
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                device_ids: [],
+                delays: [],
+                sent_messages: '--',
+                received_messages: '--',
+                delay_avarage: '--',
+                standard_derivation: '--',
+                out_of_order_messages: '--'
+            }
+        });
+
         var ctx = document.getElementById("delay-chart").getContext('2d');
         var delayChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: <%- JSON.stringify(labels); %>,
+                labels: app.device_ids ,
                 datasets: [{
                     label: 'Delay das Mensagens',
-                    data: <%- JSON.stringify(data); %>,
+                    data: app.delays,
                     backgroundColor: 'rgba(0, 123, 255, 1)',
                     borderWidth: 1
                 }]
@@ -90,12 +110,11 @@
                 }
             }
         });
-       
+    
         const upload = () => {
             const input = document.getElementById('sampleFile');
 
             const formData = new FormData();
-
             formData.append('sampleFile', input.files[0]);
 
             fetch('/upload', { 
@@ -103,12 +122,14 @@
                 body: formData
             }).then( response => { 
                 response.json().then( data => {
-                    updateChart(delayChart, data.device_ids, data.delays);
-                    updateDelay(data.delay_avarage);
-                    updateDerivation(data.standard_derivation);
-                    updateOutOfOrderMessages(data.out_of_order_messages);
-                    updateSentMessages(data.total_sent_messages);
-                    updateReceivedMessages(data.total_received_messages);
+                    app.device_ids = data.device_ids;
+                    app.delays = data.delays;
+                    app.delay_avarage = data.delay_avarage;
+                    app.standard_derivation = data.standard_derivation;
+                    app.out_of_order_messages = data.out_of_order_messages;
+                    app.sent_messages = data.total_sent_messages;
+                    app.received_messages = data.total_received_messages;
+                    updateChart(delayChart);
                 });     
             }).then(
                 success => console.log(success) 
@@ -117,35 +138,15 @@
             );
         };
 
-        const updateChart = (chart, labels, data) => {
-            chart.data.labels = labels;
+
+        const updateChart = (chart) => {
+            chart.data.labels = app.device_ids;
 
             chart.data.datasets.forEach((dataset) => {
-                dataset.data = data;
+                dataset.data = app.delays;
             });
             chart.update();
         }
-
-        const updateDelay = (delay) => {
-            document.getElementById('delay').innerHTML = delay;
-        }
-
-        const updateDerivation = (derivation) => {
-            document.getElementById('derivation').innerHTML = derivation;
-        }
-
-        const updateOutOfOrderMessages = (total) => {
-            document.getElementById('out-of-order-messages').innerHTML = total;
-        }
-
-        const updateSentMessages = (total) => {
-            document.getElementById('sent-messages').innerHTML = total;
-        }
-
-        const updateReceivedMessages = (total) => {
-            document.getElementById('received-messages').innerHTML = total;
-        }
-    
 
     </script>
 
