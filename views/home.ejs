@@ -12,8 +12,49 @@
   </head>
   <body>
     <div id="app">
-        <input type="file" name="sampleFile" id="sampleFile" />
-        <input type='button' class="btn" value='Analisar!' onclick="upload();" />
+        <div class="pos-f-t">
+  <div class="collapse" id="navbarToggleExternalContent">
+    <div class="bg-light p-4">
+      <h4>New Test</h4>
+      <span class="text-muted">Fill in the data for the new test</span>
+      <form class="form-inline">
+        <div class="form-group mb-2">
+            <label for="tenant" class="sr-only">Tenant</label>
+            <input type="text" class="form-control" id="tenant" placeholder="Tenant">
+        </div>
+        <div class="form-group mb-2">
+            <label for="device" class="sr-only">Device</label>
+            <input type="text" class="form-control" id="device" placeholder="Device">
+        </div>
+        <div class="form-group mb-2">
+            <label for="messages" class="sr-only">Messages</label>
+            <input type="number" class="form-control" id="messages" placeholder="Messages">
+        </div>
+        <div class="form-group mb-2">
+            <label for="per-second" class="sr-only">Per second</label>
+            <input type="number" class="form-control" id="per-second" placeholder="Per second">
+        </div>
+        <button type="submit" class="btn btn-secundary mb-2">Go!</button>
+    </form>
+    </div>
+  </div>
+  <nav class="navbar navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="dropdown">
+    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Files for Viewing
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="#">01/02/2019 14:55:01</a>
+        <a class="dropdown-item" href="#">02/02/2019 12:55:02</a>
+        <a class="dropdown-item" href="#">03/02/2019 18:55:03</a>
+    </div>
+    </div>
+  </nav>
+</div>
+
 
         <br><br>
 
@@ -21,35 +62,35 @@
             <div class="col-md-3 col-lg-2 offset-md-1">
                 <div class="card text-white bg-primary mx-sm-1 p-3">
                     <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                    <div class="text-white text-center mt-3"><h4>Mensagens enviadas</h4></div>
+                    <div class="text-white text-center mt-3"><h4>Sent messages</h4></div>
                     <div class="text-white text-center mt-2"><h1 id="sent-messages">{{ sent_messages }}</h1></div>
                 </div>
             </div>
             <div class="col-md-3 col-lg-2">
                 <div class="card text-white bg-info mx-sm-1 p-3">
                     <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                    <div class="text-white text-center mt-3"><h4>Mensagens recebidas</h4></div>
+                    <div class="text-white text-center mt-3"><h4>Received messages</h4></div>
                     <div class="text-white text-center mt-2"><h1 id="received-messages">{{ received_messages }}</h1></div>
                 </div>
             </div>
             <div class="col-md-3 col-lg-2">
                 <div class="card text-white bg-success mx-sm-1 p-3">
                     <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                    <div class="text-white text-center mt-3"><h4>Fora de ordem</h4></div>
+                    <div class="text-white text-center mt-3"><h4>Out of order</h4></div>
                     <div class="text-white text-center mt-2"><h1 id="out-of-order-messages">{{ out_of_order_messages }}</h1></div>
                 </div>
             </div>
             <div class="col-md-3 col-lg-2">
                 <div class="card text-white bg-warning mx-sm-1 p-3">
                     <div class="text-white bg-primary"><span class="fa fa-eye"></span></div>
-                    <div class="text-white text-center mt-3"><h4>Delay médio</h4></div>
+                    <div class="text-white text-center mt-3"><h4>Delay avarage</h4></div>
                     <div class="text-white text-center mt-2"><h1 id="delay">{{ delay_avarage }}</h1></div>
                 </div>
             </div>
             <div class="col-md-3 col-lg-2">
                 <div class="card text-white bg-danger mx-sm-1 p-3">
                     <div class="text-white bg-danger"><span class="fa fa-eye"></span></div>
-                    <div class="text-white text-center mt-3"><h4>Desvio do delay</h4></div>
+                    <div class="text-white text-center mt-3"><h4>Delay derivation</h4></div>
                     <div class="text-white text-center mt-2"><h1 id="derivation">{{ standard_derivation }}</h1></div>
                 </div>
             </div>
@@ -69,7 +110,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js" integrity="sha256-o8aByMEvaNTcBsw94EfRLbBrJBI+c3mjna/j4LrfyJ8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    
+
     <script>
 
         var app = new Vue({
@@ -91,7 +132,7 @@
             data: {
                 labels: app.device_ids ,
                 datasets: [{
-                    label: 'Delay das Mensagens',
+                    label: 'Messages delay',
                     data: app.delays,
                     backgroundColor: 'rgba(0, 123, 255, 1)',
                     borderWidth: 1
