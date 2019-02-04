@@ -112,10 +112,10 @@
               <span class="fa fa-eye"></span>
             </div>
             <div class="text-white text-center mt-3">
-              <h4>Sent messages</h4>
+              <h6>Total sent</h6>
             </div>
             <div class="text-white text-center mt-2">
-              <h1 id="sent-messages">{{ sent_messages }}</h1>
+              <h3 id="sent-messages">{{ sent_messages }}</h3>
             </div>
           </div>
         </div>
@@ -125,10 +125,10 @@
               <span class="fa fa-eye"></span>
             </div>
             <div class="text-white text-center mt-3">
-              <h4>Received messages</h4>
+              <h6>Total received</h6>
             </div>
             <div class="text-white text-center mt-2">
-              <h1 id="received-messages">{{ received_messages }}</h1>
+              <h3 id="received-messages">{{ received_messages }}</h3>
             </div>
           </div>
         </div>
@@ -137,9 +137,9 @@
             <div class="text-white bg-primary">
               <span class="fa fa-eye"></span>
             </div>
-            <div class="text-white text-center mt-3"><h4>Out of order</h4></div>
+            <div class="text-white text-center mt-3"><h6>Out of order</h6></div>
             <div class="text-white text-center mt-2">
-              <h1 id="out-of-order-messages">{{ out_of_order_messages }}</h1>
+              <h3 id="out-of-order-messages">{{ out_of_order_messages }}</h3>
             </div>
           </div>
         </div>
@@ -149,10 +149,10 @@
               <span class="fa fa-eye"></span>
             </div>
             <div class="text-white text-center mt-3">
-              <h4>Delay avarage</h4>
+              <h6>Delay avarage</h6>
             </div>
             <div class="text-white text-center mt-2">
-              <h1 id="delay">{{ delay_avarage }}</h1>
+              <h3 id="delay">{{ delay_avarage }}</h3>
             </div>
           </div>
         </div>
@@ -162,10 +162,10 @@
               <span class="fa fa-eye"></span>
             </div>
             <div class="text-white text-center mt-3">
-              <h4>Delay derivation</h4>
+              <h6>Delay derivation</h6>
             </div>
             <div class="text-white text-center mt-2">
-              <h1 id="derivation">{{ standard_derivation }}</h1>
+              <h3 id="derivation">{{ standard_derivation }}</h3>
             </div>
           </div>
         </div>
@@ -174,7 +174,7 @@
       <br /><br /><br />
 
       <div class="d-flex justify-content-center">
-        <div style="position: relative; height:40vh; width:60vw">
+        <div class="col-md-8">
           <canvas id="delay-chart"></canvas>
         </div>
       </div>
@@ -215,6 +215,16 @@
           delay_avarage: "--",
           standard_derivation: "--",
           out_of_order_messages: "--"
+        },
+        created: () => {
+          fetch("/file")
+          .then(response => {
+            response.json().then(data => {
+              app.files = data.files;
+            });
+          })
+          .then(success => console.log(success))
+          .catch(error => console.log(error));
         }
       });
 
@@ -240,7 +250,12 @@
                   beginAtZero: true
                 }
               }
-            ]
+            ],
+            xAxes: [{
+                ticks: {
+                    display: false
+                }
+            }]
           }
         }
       });
@@ -334,6 +349,18 @@
           .then(success => console.log(success))
           .catch(error => console.log(error));
       }
+
+      const getFiles = () => {
+        fetch("/upload")
+          .then(response => {
+            response.json().then(data => {
+              app.files = data.files;
+            });
+          })
+          .then(success => console.log(success))
+          .catch(error => console.log(error));
+      }
+      
     </script>
   </body>
 </html>

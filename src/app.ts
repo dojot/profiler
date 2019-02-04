@@ -16,6 +16,7 @@ dotenv.config({ path: ".env.example" });
 import * as homeController from "./controllers/home";
 import * as uploadController from "./controllers/upload";
 import * as testController from "./controllers/test";
+import * as fileController from "./controllers/file";
 
 const app = express();
 
@@ -50,5 +51,6 @@ app.use(
 app.get("/", homeController.index);
 app.post("/upload", uploadController.create);
 app.post("/test", testController.create);
+app.get("/file", fileController.index);
 
 export default app;
