@@ -10,38 +10,23 @@ export let create = (req: Request, res: Response) => {
     const messages = _.toInteger(req.body.messages);
     const perSecond = _.toInteger(req.body.perSecond);
 
+    try {
 
-    shell.exec(`mqtt-beamer ${tenant} ${device} ${perSecond} ${messages}`, {async: true}, () => {
-        
-            try {
-            shell.exec(`mqtt-beamer ${tenant} ${device} ${perSecond} ${messages}`, {async: true}, () => {
-
-                let watcher = fs.watch('/l/disk0/alribeiro/uploads', { encoding: 'buffer' }, (eventType, filename) => {
-                    fs.readdir('/l/disk0/alribeiro/uploads', (err, files) => {
-                        res.json({
-                            files: files
-                        });
+      shell.exec(`mqtt-beamer ${tenant} ${device} ${perSecond} ${messages}`, {async: true}, () => {
+        let watcher = fs.watch('/l/disk0/alribeiro/uploads', (eventType, filename) => {
+            if(filename != 'result.csv'){
+                watcher.close();
+                fs.readdir('/l/disk0/alribeiro/uploads', (err, files) => {
+                    res.json({
+                        files: files
                     });
-                    watcher.close();
-
                 });
+            }
+        });
+      });
+      
+    } catch (error) {
+        console.log('Error: ' + error);
+    }
 
-            });
-            
-        } catch (error) {
-            console.log('Error: ' + error);
-        }
-
-    });
-
-       
-    
-
-   
-
-    
-
-    
-
-    
 }
