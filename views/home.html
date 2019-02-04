@@ -7,12 +7,7 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
 
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
     <title>Dojot</title>
   </head>
@@ -64,7 +59,12 @@
                   placeholder="Per second"
                 />
               </div>
-              <button id="create-test-button" type="button" onclick="createTest();" class="btn btn-secundary mb-2">Go!</button>              
+              <button v-if="!running" id="create-test-button" type="button" onclick="createTest();" class="btn btn-secundary mb-2">
+                  Go!
+              </button>
+              <div v-if="running" class="mb-2 ml-2 spinner-grow" style="width: 2rem; height: 2rem;" role="status">
+                  <span class="sr-only">Loading...</span>
+              </div>              
             </form>
           </div>
         </div>
@@ -115,7 +115,12 @@
               <h6>Total sent</h6>
             </div>
             <div class="text-white text-center mt-2">
-              <h3 id="sent-messages">{{ sent_messages }}</h3>
+              <h3 v-if="!loading" id="sent-messages">{{ sent_messages }}</h3>
+              <div v-if="loading" class="text-center">
+                  <div class="spinner-border mb-1" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
@@ -128,7 +133,12 @@
               <h6>Total received</h6>
             </div>
             <div class="text-white text-center mt-2">
-              <h3 id="received-messages">{{ received_messages }}</h3>
+              <h3 v-if="!loading" id="received-messages">{{ received_messages }}</h3>
+              <div v-if="loading" class="text-center">
+                  <div class="spinner-border mb-1" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
@@ -139,7 +149,12 @@
             </div>
             <div class="text-white text-center mt-3"><h6>Out of order</h6></div>
             <div class="text-white text-center mt-2">
-              <h3 id="out-of-order-messages">{{ out_of_order_messages }}</h3>
+              <h3 v-if="!loading" id="out-of-order-messages">{{ out_of_order_messages }}</h3>
+              <div v-if="loading" class="text-center">
+                  <div class="spinner-border mb-1" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
@@ -152,7 +167,12 @@
               <h6>Delay avarage</h6>
             </div>
             <div class="text-white text-center mt-2">
-              <h3 id="delay">{{ delay_avarage }}</h3>
+              <h3 v-if="!loading" id="delay">{{ delay_avarage }}</h3>
+              <div v-if="loading" class="text-center">
+                  <div class="spinner-border mb-1" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
@@ -165,7 +185,12 @@
               <h6>Delay derivation</h6>
             </div>
             <div class="text-white text-center mt-2">
-              <h3 id="derivation">{{ standard_derivation }}</h3>
+              <h3 v-if="!loading" id="derivation">{{ standard_derivation }}</h3>
+              <div v-if="loading" class="text-center">
+                  <div class="spinner-border mb-1" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
@@ -180,21 +205,9 @@
       </div>
     </div>
 
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"
       integrity="sha256-o8aByMEvaNTcBsw94EfRLbBrJBI+c3mjna/j4LrfyJ8="
@@ -214,7 +227,9 @@
           received_messages: "--",
           delay_avarage: "--",
           standard_derivation: "--",
-          out_of_order_messages: "--"
+          out_of_order_messages: "--",
+          running: false,
+          loading: false
         },
         created: () => {
           fetch("/file")
@@ -301,6 +316,7 @@
         formData.append("perSecond", perSecond);
 
         testButton.innerHTML = "Running...";
+        app.running = true;
 
         fetch("/test", {
           method: "POST",
@@ -310,11 +326,27 @@
             response.json().then(data => {
               app.files = data.files;
               navButton.click();
-              testButton.innerHTML = "Go!";
+              setTimeout( () => {
+                testButton.innerHTML = "Go!";
+                app.running = false;
+              }, 900);
+              
             });
           })
-          .then(success => console.log(success))
-          .catch(error => console.log(error));
+          .then(success => {
+            setTimeout( () => {
+                testButton.innerHTML = "Go!";
+                app.running = false;
+            }, 900);
+            console.log(success)
+          })
+          .catch(error => {
+            setTimeout( () => {
+                testButton.innerHTML = "Go!";
+                app.running = false;
+            }, 900);
+            console.log(error)
+          });
       };
 
       const updateChart = chart => {
@@ -330,6 +362,8 @@
         const formData = new FormData();
         formData.append("fileName", field.getAttribute('name'));
 
+        app.loading = true;
+
         fetch("/upload", {
           method: "POST",
           body: formData
@@ -344,6 +378,9 @@
               app.sent_messages = data.total_sent_messages;
               app.received_messages = data.total_received_messages;
               updateChart(delayChart);
+              setTimeout( () => {
+                app.loading = false;
+              }, 300);
             });
           })
           .then(success => console.log(success))
