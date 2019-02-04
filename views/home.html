@@ -64,7 +64,7 @@
                   placeholder="Per second"
                 />
               </div>
-              <button id="create-test-button" type="button" onclick="createTest();" class="btn btn-secundary mb-2">Go!</button>
+              <button id="create-test-button" type="button" onclick="createTest();" class="btn btn-secundary mb-2">Go!</button>              
             </form>
           </div>
         </div>
@@ -94,8 +94,8 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               
-              <a onclick="selectFile(this.innerHTML)" class="dropdown-item" href="#" v-for="file in files">
-                {{ file }}
+              <a onclick="selectFile(this)" v-bind:name="file.name" class="dropdown-item" href="#" v-for="file in files">
+                {{ file.formattedName }}
               </a>
             
             </div>
@@ -300,7 +300,7 @@
         formData.append("messages", messages);
         formData.append("perSecond", perSecond);
 
-        testButton.innerHTML = "Creating test...";
+        testButton.innerHTML = "Running...";
 
         fetch("/test", {
           method: "POST",
@@ -326,9 +326,9 @@
         chart.update();
       };
 
-      const selectFile = (value) => {
+      const selectFile = (field) => {
         const formData = new FormData();
-        formData.append("fileName", value);
+        formData.append("fileName", field.getAttribute('name'));
 
         fetch("/upload", {
           method: "POST",
