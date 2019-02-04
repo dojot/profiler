@@ -7,23 +7,6 @@ import { UploadedFile } from "express-fileupload";
 import shell = require('shelljs');
 
 export let create = (req: Request, res: Response) => {
-    // let content = shell.exec('mqtt-beamer admin 436c75 100 100').stdout;
-    // console.log('Tratando respostas');
-    // console.log(content);
-    
-    // if (Object.keys(req.files).length == 0) {
-    //     return res.status(400).send('No files were uploaded.');
-    // }
-
-    // if('mv' in req.files.sampleFile){
-    //     let sampleFile = req.files.sampleFile;
-    //     sampleFile.mv('/tmp/upload.csv', (err: any) => {
-    //         if (err) {
-    //             console.log('Error while copying file to target location');
-    //         }
-    //     });
-    // }
-
     var test = new Test();
 
     readline.createInterface({
