@@ -1,0 +1,6 @@
+[submodule "beamer"]
+	path = beamer
+	url = git@github.com:andersonluisribeiro/mqtt-beamer.git
+[submodule "tinytools"]
+	path = tinytools
+	url = git@github.com:andersonluisribeiro/tinytools.git
