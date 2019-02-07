@@ -5,7 +5,6 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import flash from "express-flash";
 import path from "path";
-import passport from "passport";
 import ejs from "ejs";
 import fileupload from "express-fileupload";
 import expressValidator from "express-validator";
@@ -20,7 +19,7 @@ import * as fileController from "./controllers/file";
 
 const app = express();
 
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 3001);
 app.set("views", path.join(__dirname, "../views"));
 app.engine("html", ejs.renderFile);
 app.set("view engine", "html");
@@ -36,8 +35,7 @@ app.use(session({
   secret: SESSION_SECRET,
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+
 app.use(flash());
 app.use((req, res, next) => {
   res.locals.user = req.user;

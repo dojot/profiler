@@ -1,41 +1,75 @@
 import { Request, Response } from "express";
-import chokidar = require('chokidar');
-import fs = require('fs');
-import * as _ from 'lodash';
-import shell = require('shelljs');
+import fs = require("fs");
+import * as _ from "lodash";
+import shell = require("shelljs");
+import logger from "../util/logger";
+import util = require("util");
 import { ResultFile } from "../models/ResultFile";
+import { File } from "../models/File";
+import { SocketIoClient } from "../models/SocketioClient";
+import { FileLine } from "../models/FileLine";
 
 export let create = (req: Request, res: Response) => {
-    const tenant = req.body.tenant;
-    const device = req.body.device;
-    const messages = _.toInteger(req.body.messages);
-    const perSecond = _.toInteger(req.body.perSecond);
+  const server = req.body.server;
+  const token = req.body.token;
+  const tenant = req.body.tenant;
+  const device = req.body.device;
+  const messages = _.toInteger(req.body.messages);
+  const perSecond = _.toInteger(req.body.perSecond);
 
-    try {
+  let data: any = [];
 
-      shell.exec(`mqtt-beamer ${tenant} ${device} ${perSecond} ${messages}`, {async: true}, () => {
-        let watcher = fs.watch('/l/disk0/alribeiro/uploads', (eventType, filename) => {
-            if(filename != 'result.csv'){
-                watcher.close();
-                fs.readdir('/l/disk0/alribeiro/uploads', (err, files) => {
-                    let data = files.map(f => {
-                        let result = new ResultFile(f);
-                        return {
-                            name: result.name,
-                            formattedName: result.formattedName
-                        };
-                    });
-                    res.json({
-                        files: data
-                    });
+  try {
 
-                });
-            }
-        });
+    logger.debug(`Using server: ${server}`);
+    let client = new SocketIoClient(server, 1000, token);
+
+    client.onMessage((data: any) => {
+      logger.debug(`Message received: ${util.inspect(data)}`);
+    
+      let file = File.instance;
+      let message = FileLine.instance(data);
+    
+      fs.appendFile(file.path, message.content, err => {
+    
+        if (err) logger.debug(`Error writing message: ${util.inspect(data)}`);
+    
+        if (message.last){
+    
+          logger.debug(`Last message: ${util.inspect(data)}`);
+    
+          fs.rename(file.path, file.newPath, (err) => {
+            if(err) console.log('Error: ' + err);
+          })
+    
+        }
       });
-      
-    } catch (error) {
-        console.log('Error: ' + error);
-    }
+    });
+    
+    client.start();
+  
+    shell.exec(`mqtt-beamer ${server} ${tenant} ${device} ${perSecond} ${messages}`, {async: true}, () => {
+      let watcher = fs.watch('/home/uploads', (eventType, filename) => {
+        if(filename != 'result.csv'){
+          watcher.close();
+          client.close();
+          fs.readdir("/home/uploads", (err, files) => {
+            data = files.map(f => {
+              const result = new ResultFile(f);
+              return {
+                name: result.name,
+                formattedName: result.formattedName
+              };
+            });
+            res.json({
+              files: data
+            });
+          });
+        }
+      });
+    });
 
-}
+  } catch (error) {
+    console.log("Error: " + error);
+  }
+};
