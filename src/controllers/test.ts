@@ -20,55 +20,54 @@ export let create = (req: Request, res: Response) => {
   let data: any = [];
 
   try {
-
     logger.debug(`Using server: ${server}`);
-    let client = new SocketIoClient(server, 1000, token);
+    const client = new SocketIoClient(server, 1000, token);
 
     client.onMessage((data: any) => {
       logger.debug(`Message received: ${util.inspect(data)}`);
-    
-      let file = File.instance;
-      let message = FileLine.instance(data);
-    
+
+      const file = File.instance;
+      const message = FileLine.instance(data);
+
       fs.appendFile(file.path, message.content, err => {
-    
         if (err) logger.debug(`Error writing message: ${util.inspect(data)}`);
-    
-        if (message.last){
-    
+
+        if (message.last) {
           logger.debug(`Last message: ${util.inspect(data)}`);
-    
-          fs.rename(file.path, file.newPath, (err) => {
-            if(err) console.log('Error: ' + err);
-          })
-    
-        }
-      });
-    });
-    
-    client.start();
-  
-    shell.exec(`mqtt-beamer ${server} ${tenant} ${device} ${perSecond} ${messages}`, {async: true}, () => {
-      let watcher = fs.watch('/home/uploads', (eventType, filename) => {
-        if(filename != 'result.csv'){
-          watcher.close();
-          client.close();
-          fs.readdir("/home/uploads", (err, files) => {
-            data = files.map(f => {
-              const result = new ResultFile(f);
-              return {
-                name: result.name,
-                formattedName: result.formattedName
-              };
-            });
-            res.json({
-              files: data
-            });
+
+          fs.rename(file.path, file.newPath, err => {
+            if (err) console.log("Error: " + err);
           });
         }
       });
     });
 
+    client.start();
+
+    shell.exec(
+      `mqtt-beamer ${server} ${tenant} ${device} ${perSecond} ${messages}`,
+      { async: true },
+      () => {
+        const watcher = fs.watch("/home/uploads", (eventType, filename) => {
+          if (filename != "result.csv") {
+            watcher.close();
+            client.close();
+            fs.readdir("/home/uploads", (err, files) => {
+              data = files.map(f => {
+                const result = new ResultFile(f);
+                return {
+                  name: result.name,
+                  formattedName: result.formattedName
+                };
+              });
+              res.json({
+                files: data
+              });
+            });
+          }
+        });
+      }
+    );
   } catch (error) {
     console.log("Error: " + error);
   }
