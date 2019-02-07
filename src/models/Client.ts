@@ -4,7 +4,6 @@ import logger from "../util/logger";
  * Class for communications using WebSockets
  */
 class Client {
-
   /** Server to connect */
   protected server: string;
 

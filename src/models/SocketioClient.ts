@@ -3,8 +3,7 @@ import { Client } from "./Client";
 import logger from "../util/logger";
 
 class SocketIoClient extends Client {
-
-    private socketIo: SocketIOClient.Socket;
+  private socketIo: SocketIOClient.Socket;
 
   /**
    * Constructor
@@ -13,12 +12,14 @@ class SocketIoClient extends Client {
    */
   constructor(server: string, autoReconnectInterval: number, token: string) {
     super(server, autoReconnectInterval);
-    logger.debug(`Creating connection to server: ${this.server}, using token ${token}`);
+    logger.debug(
+      `Creating connection to server: ${this.server}, using token ${token}`
+    );
     const query: SocketIOClient.ConnectOpts = {
-        query: {
-            token,
-        },
-        transports: ["polling"],
+      query: {
+        token
+      },
+      transports: ["polling"]
     };
     this.socketIo = sio(this.server, query);
     logger.debug(`SocketIO was created.`);
@@ -28,7 +29,6 @@ class SocketIoClient extends Client {
    * Start the websocket handling
    */
   public start() {
-
     this.socketIo.on("all", (data: any) => {
       logger.debug("Received message");
       if (this.onMessageCb) {
@@ -62,7 +62,7 @@ class SocketIoClient extends Client {
     });
   }
 
-  public close(){
+  public close() {
     this.socketIo.close();
   }
   /**
