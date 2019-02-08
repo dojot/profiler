@@ -9,8 +9,24 @@ This service depends on docker to work. To install it, please run the
 commands below. These have been tested on an ubuntu 18.04 environment (same used when generating)
 the service's docker image.
 
+To build docker image:
+
 ```shell
 # you may need sudo for those
 git submodule init && git submodule update
 docker build -t dojo-performance:latest .
+```
+
+To run in development mode:
+
+```shell
+# you may need sudo for those
 docker run -p 3000:3000 dojo-performance:latest
+```
+
+To run in production mode:
+
+```shell
+# you may need sudo for those
+docker run -p 3000:3000 -e "NODE_ENV=production" dojo-performance:latest
+```
