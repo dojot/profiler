@@ -1,3 +1,8 @@
+import fs = require("fs");
+import logger from "../util/logger";
+import util = require("util");
+import { FileLine } from "./FileLine";
+
 class File {
   private _path: string = "";
   private _newPath: string = "";
@@ -26,6 +31,23 @@ class File {
     const newName = `${day}_${month}_${year}_${hour}_${minute}_${seconds}`;
 
     return new File("/home/uploads/result.csv", `/home/uploads/${newName}.csv`);
+  }
+
+  public appendLine(fileLine: FileLine) {
+    fs.appendFile(this._path, fileLine.content, err => {
+      if (err) logger.debug(`Error writing message: ${util.inspect(fileLine)}`);
+
+      if (fileLine.last) {
+        logger.debug(`Last message: ${util.inspect(fileLine)}`);
+        this.rename();
+      }
+    });
+  }
+
+  public rename() {
+    fs.rename(this._path, this._newPath, err => {
+      if (err) console.log("Error: " + err);
+    });
   }
 }
 

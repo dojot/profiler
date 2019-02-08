@@ -34,7 +34,7 @@ export class SocketClient {
 
   andProcessMessageWith(processor: MessageProcessor) {
     this._client.onMessage((data: any) => {
-      processor.processMessage(data);
+      processor.process(data);
     });
     return this;
   }
