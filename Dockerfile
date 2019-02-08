@@ -10,7 +10,7 @@ COPY . .
 
 RUN npm run build
 
-RUN apk update && apk add build-base libtool autoconf automake jq openssh python3 curl
+RUN apk update && apk add build-base libtool autoconf automake
 
 WORKDIR /usr/src/app/beamer
 
