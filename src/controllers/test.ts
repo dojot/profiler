@@ -1,14 +1,5 @@
 import { Request, Response } from "express";
-import fs = require("fs");
 import * as _ from "lodash";
-import shell = require("shelljs");
-import logger from "../util/logger";
-import util = require("util");
-import { ResultFile } from "../models/ResultFile";
-import { File } from "../models/File";
-import request = require("request");
-import { SocketIoClient } from "../models/SocketioClient";
-import { FileLine } from "../models/FileLine";
 import { DojotClient } from "../models/DojotClient";
 import { SocketClient } from "../models/SocketClient";
 import { BeamerClient } from "../models/BeamerClient";
