@@ -1,6 +1,6 @@
 import shell = require("shelljs");
 import fs = require("fs");
-import { ResultFile } from "./ResultFile";
+import { Directory } from "./Directory";
 
 export class BeamerClient {
   private _server: string;
@@ -37,7 +37,6 @@ export class BeamerClient {
   }
 
   execute(resolve: Resolve) {
-    let data: any = [];
     shell.exec(
       `mqtt-beamer ${this._server} ${this._tenant} ${this._device} ${
         this._perSecond
@@ -47,14 +46,7 @@ export class BeamerClient {
         const watcher = fs.watch("/home/uploads", (eventType, filename) => {
           if (filename != "result.csv") {
             watcher.close();
-            fs.readdir("/home/uploads", (err, files) => {
-              data = files.map(f => {
-                const result = new ResultFile(f);
-                return {
-                  name: result.name,
-                  formattedName: result.formattedName
-                };
-              });
+            Directory.listFiles((data) => {
               resolve(data);
             });
           }
