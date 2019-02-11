@@ -1,6 +1,8 @@
 import shell = require("shelljs");
 import fs = require("fs");
 import { Directory } from "./Directory";
+import logger from "../util/logger";
+
 
 export class BeamerClient {
   private _server: string;
@@ -43,8 +45,10 @@ export class BeamerClient {
       } ${this._messages}`,
       { async: true },
       () => {
+        logger.debug(`mqtt beamer sent all messages`);
         const watcher = fs.watch("/home/uploads", (eventType, filename) => {
           if (filename != "result.csv") {
+            logger.debug(`change detected in file directory`);
             watcher.close();
             Directory.listFiles((data) => {
               resolve(data);

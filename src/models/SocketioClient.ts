@@ -5,11 +5,6 @@ import logger from "../util/logger";
 class SocketIoClient extends Client {
   private socketIo: SocketIOClient.Socket;
 
-  /**
-   * Constructor
-   * @param server The server that this websocket client will connect to
-   * @param autoReconnectInterval Interval between reconnections
-   */
   constructor(server: string, autoReconnectInterval: number, token: string) {
     super(server, autoReconnectInterval);
     logger.debug(
@@ -25,9 +20,6 @@ class SocketIoClient extends Client {
     logger.debug(`SocketIO was created.`);
   }
 
-  /**
-   * Start the websocket handling
-   */
   public start() {
     this.socketIo.on("all", (data: any) => {
       logger.debug("Received message");
@@ -40,11 +32,10 @@ class SocketIoClient extends Client {
 
     this.socketIo.on("close", (code: number) => {
       switch (code) {
-        case 1000: // CLOSE_NORMAL
+        case 1000:
           logger.debug("WebSocket: closed");
           break;
         default:
-          // Abnormal closure
           this.reconnect();
           break;
       }
@@ -65,9 +56,7 @@ class SocketIoClient extends Client {
   public close() {
     this.socketIo.close();
   }
-  /**
-   * Reconnect the websocket, if any error occured previously.
-   */
+ 
   public reconnect() {
     logger.debug(`WebSocketClient: retry in ${this.autoReconnectInterval}ms`);
     if (this.socketIo) {

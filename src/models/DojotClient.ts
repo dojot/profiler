@@ -1,5 +1,5 @@
 import request = require("request-promise");
-import { RequestPromise } from "request-promise";
+import logger from "../util/logger";
 
 export class DojotClient {
   private _server: string;
@@ -36,6 +36,7 @@ export class DojotClient {
         }
       })
       .then(res => {
+        logger.debug("User token has been recovered");
         request
           .get(`http://${this._server}:8000/stream/socketio`, {
             headers: {
@@ -43,9 +44,14 @@ export class DojotClient {
             }
           })
           .then(res => {
+            logger.debug("Socketyio token has been recovered");
             resolve(JSON.parse(res).token);
+          }).catch(err => {
+            logger.error(`Failed to recover socketio token: ${err.message}`);
           });
-      });
+      }).catch(err => {
+        logger.error(`Failed to recover user token: ${err.message}`);
+      })
   }
 }
 
