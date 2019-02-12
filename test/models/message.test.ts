@@ -10,13 +10,13 @@ describe("Message class", () => {
     expect(() => Message.instance("")).to.throw(TypeError);
     expect(() => Message.instance("xxx")).to.throw(TypeError);
     expect(() => Message.instance("null")).to.throw(TypeError);
-    expect(() => Message.instance("xxx;1548872097133;1548872098267;1")).to.throw(TypeError);
-    expect(() => Message.instance("null;1548872097133;1548872098267;1")).to.throw(TypeError);
-    expect(() => Message.instance(";1548872097133;1548872098267;1")).to.throw(TypeError);
+    expect(() => Message.instance("xxx;1548872097133;1548872098267;1548872098255;1")).to.throw(TypeError);
+    expect(() => Message.instance("null;1548872097133;1548872098267;1548872098255;1")).to.throw(TypeError);
+    expect(() => Message.instance(";1548872097133;1548872098267;1;1548872098255")).to.throw(TypeError);
   });
 
   it("should calculate delay", () => {
-    let message = Message.instance("1548872097132;1548872097133;1548872098267;1");
+    let message = Message.instance("1548872097132;1548872097133;1548872098267;1548872098255;1");
     expect(message.delay).to.equal(1135);
   });
 

@@ -4,7 +4,8 @@ import { MessageProcessor } from "./MessageProcessor";
 export class SocketClient {
   private _token: string;
   private _server: string;
-
+  private _tenant: string;
+  private _device: string;
   private _client: SocketIoClient;
 
   private constructor() {}
@@ -16,6 +17,16 @@ export class SocketClient {
 
   andToken(token: string) {
     this._token = token;
+    return this;
+  }
+
+  andTenant(tenant: string) {
+    this._tenant = tenant;
+    return this;
+  }
+
+  andDevice(device: string) {
+    this._device = device;
     return this;
   }
 
@@ -34,7 +45,7 @@ export class SocketClient {
 
   andProcessMessageWith(processor: MessageProcessor) {
     this._client.onMessage((data: any) => {
-      processor.process(data);
+      processor.process(data, this._tenant, this._device);
     });
     return this;
   }

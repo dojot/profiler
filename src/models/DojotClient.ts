@@ -46,12 +46,14 @@ export class DojotClient {
           .then(res => {
             logger.debug("Socketyio token has been recovered");
             resolve(JSON.parse(res).token);
-          }).catch(err => {
+          })
+          .catch(err => {
             logger.error(`Failed to recover socketio token: ${err.message}`);
           });
-      }).catch(err => {
-        logger.error(`Failed to recover user token: ${err.message}`);
       })
+      .catch(err => {
+        logger.error(`Failed to recover user token: ${err.message}`);
+      });
   }
 }
 

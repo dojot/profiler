@@ -56,7 +56,7 @@ class SocketIoClient extends Client {
   public close() {
     this.socketIo.close();
   }
- 
+
   public reconnect() {
     logger.debug(`WebSocketClient: retry in ${this.autoReconnectInterval}ms`);
     if (this.socketIo) {

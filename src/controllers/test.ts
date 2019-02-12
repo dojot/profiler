@@ -22,6 +22,8 @@ export let create = (req: Request, res: Response) => {
 
       const socketClient = SocketClient.build()
         .withServer(server)
+        .andTenant(tenant)
+        .andDevice(device)
         .andToken(token)
         .createClient()
         .andProcessMessageWith(new MessageProcessor())

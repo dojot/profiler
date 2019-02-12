@@ -3,6 +3,7 @@ import * as _ from "lodash";
 class Message {
   private _deviceTime: Date;
   private _moscaTime: Date;
+  private _mongoTime: Date;
   private _socketTime: Date;
   private _totalSentMessages: number;
 
@@ -21,6 +22,14 @@ class Message {
       this._moscaTime = this._convertDate(data);
     } catch (error) {
       throw new TypeError("Mosca time is not valid");
+    }
+  }
+
+  setMongoTime(data: string) {
+    try {
+      this._mongoTime = this._convertDate(data);
+    } catch (error) {
+      throw new TypeError("Mongo time is not valid");
     }
   }
 
@@ -49,6 +58,10 @@ class Message {
 
   get moscaTime(): Date {
     return this._moscaTime;
+  }
+
+  get mongoTime(): Date {
+    return this._mongoTime;
   }
 
   get moscaTimestamp(): number {
@@ -96,7 +109,8 @@ class Message {
     message.setDeviceTime(row[0]);
     message.setMoscaTime(row[1]);
     message.setSocketTime(row[2]);
-    message.setTotalSentMessages(row[3]);
+    message.setMongoTime(row[3]);
+    message.setTotalSentMessages(row[4]);
 
     return message;
   }

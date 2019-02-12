@@ -1,7 +1,6 @@
 import logger from "../util/logger";
 
 class Client {
- 
   protected server: string;
 
   protected autoReconnectInterval: number;
