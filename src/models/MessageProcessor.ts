@@ -41,7 +41,7 @@ export class MessageProcessor {
                 err
             );
           });
-      }, 2000);
+      }, 20000);
     }
   }
 }

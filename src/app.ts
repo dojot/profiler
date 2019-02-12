@@ -15,7 +15,9 @@ dotenv.config({ path: ".env.example" });
 import * as homeController from "./controllers/home";
 import * as testController from "./controllers/test";
 import * as fileController from "./controllers/file";
-import * as uploadController from "./controllers/upload";
+import * as socketController from "./controllers/socket-result";
+import * as moscaController from "./controllers/mosca-result";
+import * as mongoController from "./controllers/mongo-result";
 
 const app = express();
 
@@ -49,6 +51,8 @@ app.use(
 app.get("/", homeController.index);
 app.post("/test", testController.create);
 app.get("/file", fileController.index);
-app.post("/upload", uploadController.create);
+app.post("/socket_result", socketController.create);
+app.post("/mosca_result", moscaController.create);
+app.post("/mongo_result", mongoController.create);
 
 export default app;

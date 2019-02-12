@@ -1,8 +1,12 @@
 import { Message } from "./Message";
 import * as _ from "lodash";
 
-class Test {
+export class Test {
   private _messages: Message[] = [];
+
+  constructor(messages: Message[] = []){
+    this._messages = messages;
+  }
 
   public addMessage(message: Message) {
     this._messages.push(message);
@@ -15,6 +19,7 @@ class Test {
   public get messages() {
     return this._messages;
   }
+
 
   public get delayAvarage(): number {
     if (this.messages.length == 0) {
@@ -42,13 +47,13 @@ class Test {
 
   get outOfOrderMessages() {
     let total = 0;
-    const devicesTime = this.messages.map(m => m.deviceTimestamp);
-    const devicesTimeOrdered = this.messages.map(m => m.deviceTimestamp).sort();
+    const devicesTime = this.messages.map(m => m.sendTimestamp);
+    const devicesTimeOrdered = this.messages.map(m => m.sendTimestamp).sort();
 
     this.messages.forEach(message => {
-      const deviceTimeIndex = devicesTime.indexOf(message.deviceTimestamp);
+      const deviceTimeIndex = devicesTime.indexOf(message.sendTimestamp);
       const deviceTimeOrderedIndex = devicesTimeOrdered.indexOf(
-        message.deviceTimestamp
+        message.sendTimestamp
       );
 
       if (deviceTimeIndex != deviceTimeOrderedIndex) {
@@ -62,6 +67,18 @@ class Test {
   get totalSentMessages(): number {
     return this.messages[0].totalSentMessages;
   }
-}
 
-export { Test };
+  get json(){
+    return {
+      device_ids: this.messages.map(message =>
+        message.sendTime.toString()
+      ),
+      delays: this.messages.map(message => message.delay),
+      delay_avarage: this.delayAvarage,
+      standard_derivation: this.standardDerivation,
+      out_of_order_messages: this.outOfOrderMessages,
+      total_received_messages: this.totalMessages,
+      total_sent_messages: this.totalSentMessages
+    }
+  }
+}

@@ -20,7 +20,7 @@
           <div class="bg-light p-4">
             <h4>Run a New Test!</h4>
             <span class="text-muted">Fill in the data for the new test</span>
-            <form class="form-inline">
+            <form class="form-inline col-10">
               <div class="form-group mb-2">
                   <label for="server" class="sr-only">Server</label>
                   <input
@@ -98,9 +98,11 @@
                   required
                 />
               </div>
-              <button v-if="!running" id="create-test-button" type="button" onclick="createTest();" class="btn btn-secundary mb-2">
-                  Go!
-              </button>
+              <div class="form-group mb-2">
+                <button v-if="!running" id="create-test-button" type="button" onclick="createTest();" class="btn btn-secundary mb-2">
+                    Go!
+                </button>
+              </div>
               <div v-if="running" class="mb-2 ml-2 spinner-grow" style="width: 2rem; height: 2rem;" role="status">
                   <span class="sr-only">Loading...</span>
               </div>              
@@ -108,6 +110,7 @@
           </div>
         </div>
         <nav class="navbar navbar-light bg-light">
+          
           <button
             id="navbar-button"
             class="navbar-toggler"
@@ -120,6 +123,11 @@
           >
             <span class="navbar-toggler-icon"></span>
           </button>
+          <div class="btn-group" role="group" aria-label="Options">
+              <button type="button" onclick="selectDataSource('socket');" class="btn btn-light">Socketio</button>
+              <button type="button" onclick="selectDataSource('mosca');" class="btn btn-light">Mosca</button>
+              <button type="button" onclick="selectDataSource('mongo');" class="btn btn-light">Mongo</button>
+            </div>
           <div class="dropdown">
             <button
               class="btn btn-light dropdown-toggle"
@@ -142,13 +150,6 @@
         </nav>
       </div>
 
-
-
-      <div class="btn-group col-md-2 offset-md-5" role="group" aria-label="Basic example">
-        <button type="button" class="btn">Socketio</button>
-        <button type="button" class="btn">Mosca</button>
-        <button type="button" class="btn">Mongo</button>
-      </div>
 
       <div class="row w-100 mt-4">
         <div class="col-md-3 col-lg-2 offset-md-1">
@@ -273,6 +274,8 @@
           delay_avarage: "--",
           standard_derivation: "--",
           out_of_order_messages: "--",
+          data_source: "socket",
+          file_name: "",
           running: false,
           loading: false
         },
@@ -320,31 +323,6 @@
         }
       });
 
-      const upload = () => {
-        const input = document.getElementById("sampleFile");
-
-        const formData = new FormData();
-        formData.append("sampleFile", input.files[0]);
-
-        fetch("/upload", {
-          method: "POST",
-          body: formData
-        })
-          .then(response => {
-            response.json().then(data => {
-              app.device_ids = data.device_ids;
-              app.delays = data.delays;
-              app.delay_avarage = data.delay_avarage;
-              app.standard_derivation = data.standard_derivation;
-              app.out_of_order_messages = data.out_of_order_messages;
-              app.sent_messages = data.total_sent_messages;
-              app.received_messages = data.total_received_messages;
-              updateChart(delayChart);
-            });
-          })
-          .then(success => console.log(success))
-          .catch(error => console.log(error));
-      };
 
       const createTest = () => {
         navButton = document.getElementById("navbar-button");
@@ -435,13 +413,24 @@
         chart.update();
       };
 
+      const selectDataSource = (dataSource) => {
+        app.data_source = dataSource;
+        getResult();
+      }
+
       const selectFile = (field) => {
+        app.file_name = field.getAttribute('name');
+        getResult();
+      }
+
+      const getResult = () => {
         const formData = new FormData();
-        formData.append("fileName", field.getAttribute('name'));
+        formData.append("type", app.data_source);
+        formData.append("fileName", app.file_name);
 
         app.loading = true;
 
-        fetch("/upload", {
+        fetch(`/${app.data_source}_result`, {
           method: "POST",
           body: formData
         })
@@ -458,17 +447,6 @@
               setTimeout( () => {
                 app.loading = false;
               }, 300);
-            });
-          })
-          .then(success => console.log(success))
-          .catch(error => console.log(error));
-      }
-
-      const getFiles = () => {
-        fetch("/upload")
-          .then(response => {
-            response.json().then(data => {
-              app.files = data.files;
             });
           })
           .then(success => console.log(success))

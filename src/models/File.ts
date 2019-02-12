@@ -2,12 +2,17 @@ import fs = require("fs");
 import logger from "../util/logger";
 import util = require("util");
 import { FileLine } from "./FileLine";
+import { Message } from "./Message";
+import { SocketMessage } from "./SocketMessage";
+import readline = require("readline");
 
-class File {
+export class File {
   private _path: string = "";
   private _newPath: string = "";
 
-  private constructor(path: string, newPath: string) {
+  private static DIRECTORY = "/home/uploads";
+
+  private constructor(path: string, newPath?: string) {
     this._path = path;
     this._newPath = newPath;
   }
@@ -30,7 +35,11 @@ class File {
     const seconds = date.getSeconds();
     const newName = `${day}_${month}_${year}_${hour}_${minute}_${seconds}`;
 
-    return new File("/home/uploads/result.csv", `/home/uploads/${newName}.csv`);
+    return new File(`${this.DIRECTORY}/result.csv`, `${this.DIRECTORY}/${newName}.csv`);
+  }
+
+  public static from(path: string): File {
+    return new File(path);
   }
 
   public appendLine(fileLine: FileLine) {
@@ -44,6 +53,24 @@ class File {
     });
   }
 
+  public getLines(factory: Factory) {
+    const messages: Message[] = [];
+    return new Promise( (resolve, reject) => {
+      readline
+      .createInterface({
+        input: fs.createReadStream(`${File.DIRECTORY}/${this.path}`),
+        output: process.stdout,
+        terminal: false
+      })
+      .on("line", line => {
+        messages.push(factory(line));
+      })
+      .on("close", () => {
+        resolve(messages);
+      });
+    })
+  }
+
   public rename() {
     fs.rename(this._path, this._newPath, err => {
       if (err) console.log("Error: " + err);
@@ -51,4 +78,10 @@ class File {
   }
 }
 
-export { File };
+interface Resolve {
+  (messages: Message[]): void;
+}
+
+interface Factory {
+  (line: any): Message;
+}

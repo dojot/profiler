@@ -1,43 +1,24 @@
 import * as _ from "lodash";
 
-class Message {
-  private _deviceTime: Date;
-  private _moscaTime: Date;
-  private _mongoTime: Date;
-  private _socketTime: Date;
+export class Message {
+  private _sendTime: Date;
+  private _getTime: Date;
   private _totalSentMessages: number;
 
-  private constructor() {}
 
-  setDeviceTime(data: string) {
+  setSendTime(data: string) {
     try {
-      this._deviceTime = this._convertDate(data);
+      this._sendTime = this._convertDate(data);
     } catch (error) {
       throw new TypeError("Device time is not valid");
     }
   }
 
-  setMoscaTime(data: string) {
+  setGetTime(data: string) {
     try {
-      this._moscaTime = this._convertDate(data);
+      this._getTime = this._convertDate(data);
     } catch (error) {
       throw new TypeError("Mosca time is not valid");
-    }
-  }
-
-  setMongoTime(data: string) {
-    try {
-      this._mongoTime = this._convertDate(data);
-    } catch (error) {
-      throw new TypeError("Mongo time is not valid");
-    }
-  }
-
-  setSocketTime(data: string) {
-    try {
-      this._socketTime = this._convertDate(data);
-    } catch (error) {
-      throw new TypeError("Socket time is not valid");
     }
   }
 
@@ -48,32 +29,20 @@ class Message {
     }
   }
 
-  get deviceTime(): Date {
-    return this._deviceTime;
+  get sendTime(): Date {
+    return this._sendTime;
   }
 
-  get deviceTimestamp(): number {
-    return this._deviceTime.getTime();
+  get sendTimestamp(): number {
+    return this._sendTime.getTime();
   }
 
-  get moscaTime(): Date {
-    return this._moscaTime;
+  get getTime(): Date {
+    return this._getTime;
   }
 
-  get mongoTime(): Date {
-    return this._mongoTime;
-  }
-
-  get moscaTimestamp(): number {
-    return this._deviceTime.getTime();
-  }
-
-  get socketTime(): Date {
-    return this._socketTime;
-  }
-
-  get socketTimestamp(): number {
-    return this._socketTime.getTime();
+  get getTimestamp(): number {
+    return this._getTime.getTime();
   }
 
   get totalSentMessages(): number {
@@ -81,7 +50,7 @@ class Message {
   }
 
   get delay() {
-    return this.socketTime.getTime() - this.deviceTime.getTime();
+    return this.getTimestamp - this.sendTimestamp;
   }
 
   private _convertDate(data: string): Date {
@@ -96,7 +65,7 @@ class Message {
     return date;
   }
 
-  public static instance(data: String): Message {
+  public static instance(data: String) {
     if (data == undefined || data.length == 0) {
       throw new TypeError("Data can't be empty");
     }
@@ -104,16 +73,12 @@ class Message {
     if (row.length < 4) {
       throw new TypeError("Message doens't have enough data");
     }
-
     const message = new Message();
-    message.setDeviceTime(row[0]);
-    message.setMoscaTime(row[1]);
-    message.setSocketTime(row[2]);
-    message.setMongoTime(row[3]);
+    message.setSendTime(row[0]);
+    message.setGetTime(row[2]);
     message.setTotalSentMessages(row[4]);
 
     return message;
   }
 }
 
-export { Message };

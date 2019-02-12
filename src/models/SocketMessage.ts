@@ -1,6 +1,6 @@
 import { Message } from "./Message";
 
-export class MongoMessage extends Message {
+export class SocketMessage extends Message {
   public static instance(data: String) {
     if (data == undefined || data.length == 0) {
       throw new TypeError("Data can't be empty");
@@ -9,9 +9,9 @@ export class MongoMessage extends Message {
     if (row.length < 4) {
       throw new TypeError("Message doens't have enough data");
     }
-    const message = new MongoMessage();
+    const message = new SocketMessage();
     message.setSendTime(row[0]);
-    message.setGetTime(row[3]);
+    message.setGetTime(row[2]);
     message.setTotalSentMessages(row[4]);
 
     return message;

@@ -69,9 +69,9 @@ describe("Test class", () => {
 
   it("should verify if message is out of order", () => {
 
-    let MessageMock = jest.fn<Message>((deviceTime, socketTime) => ({
-      deviceTimestamp: deviceTime,
-      socketTimestamp: socketTime
+    let MessageMock = jest.fn<Message>((sendTime, getTime) => ({
+      sendTimestamp: sendTime,
+      getTimestamp: getTime
     }));
 
     test.addMessage(new MessageMock(1));
@@ -84,8 +84,8 @@ describe("Test class", () => {
 
   it("should verify if message is out of order when is out of order", () => {
 
-    let MessageMock = jest.fn<Message>((deviceTime, socketTime) => ({
-      deviceTimestamp: deviceTime,
+    let MessageMock = jest.fn<Message>((sendTime, getTime) => ({
+      sendTimestamp: sendTime,
     }));
 
     test.addMessage(new MessageMock(1));
