@@ -12,7 +12,7 @@ class SocketIoClient extends Client {
     );
     const query: SocketIOClient.ConnectOpts = {
       query: {
-        token
+        token: token
       },
       transports: ["polling"]
     };
@@ -21,8 +21,12 @@ class SocketIoClient extends Client {
   }
 
   public start() {
+    let nMessages = 0;
     this.socketIo.on("all", (data: any) => {
-      logger.debug("Received message");
+      nMessages++;
+      if (nMessages % 500 == 0) {
+        logger.debug(`Received ${nMessages} messages`);
+      }
       if (this.onMessageCb) {
         this.onMessageCb(data);
       } else {

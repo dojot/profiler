@@ -4,7 +4,7 @@ import * as _ from "lodash";
 export class Test {
   private _messages: Message[] = [];
 
-  constructor(messages: Message[] = []){
+  constructor(messages: Message[] = []) {
     this._messages = messages;
   }
 
@@ -19,7 +19,6 @@ export class Test {
   public get messages() {
     return this._messages;
   }
-
 
   public get delayAvarage(): number {
     if (this.messages.length == 0) {
@@ -68,17 +67,15 @@ export class Test {
     return this.messages[0].totalSentMessages;
   }
 
-  get json(){
+  get json() {
     return {
-      device_ids: this.messages.map(message =>
-        message.sendTime.toString()
-      ),
+      device_ids: this.messages.map(message => message.sendTime.toString()),
       delays: this.messages.map(message => message.delay),
       delay_avarage: this.delayAvarage,
       standard_derivation: this.standardDerivation,
       out_of_order_messages: this.outOfOrderMessages,
       total_received_messages: this.totalMessages,
       total_sent_messages: this.totalSentMessages
-    }
+    };
   }
 }

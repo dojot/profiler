@@ -1,9 +1,5 @@
 import { ResultFile } from "../../src/models/ResultFile";
 import { expect } from 'chai';
-import { delay } from "bluebird";
-
-const chai = require("chai");
-const expect = chai.expect;
 
 describe("Test class", () => {
 

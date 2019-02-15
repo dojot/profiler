@@ -1,47 +1,78 @@
 import { File } from "./File";
-import { FileLine } from "./FileLine";
+import { FullMessage } from "./FullMessage";
 import { MONGODB_URI } from "../util/secrets";
 import mongoose from "mongoose";
+import mongooseMessage from "./MongooseMessage";
+import { MongoMessageDAO } from "../daos/MongoMessageDAO";
+import { DBMessageDAO } from "../daos/DBMessageDAO";
 
 export class MessageProcessor {
-  private _lines: any[] = [];
-  process(data: any, tenant: string, device: string) {
-    const fileLine = FileLine.instance(data);
-    this._lines.push(fileLine);
+  private _messages: FullMessage[] = [];
+  private _MessageModel: mongoose.Model<mongoose.Document>;
+  private _mongoMessageDAO: MongoMessageDAO;
+  private _dbMessageDAO: DBMessageDAO;
 
-    if (fileLine.last) {
-      console.log("waiting 2 seconds for mongodb saving data");
-      setTimeout(() => {
-        mongoose
-          .connect(MONGODB_URI, { useMongoClient: true, poolSize: 1 })
-          .then(() => {
-            const MessageModel = mongoose.model(
-              `${tenant}_${device}`,
-              new mongoose.Schema({
-                _id: mongoose.Schema.Types.ObjectId,
-                value: Number
-              })
-            );
-            const deviceTimes = this._lines.map(line => line.deviceTime);
-            MessageModel.where("value")
-              .in(deviceTimes)
-              .then((docs: any[]) => {
-                this._lines.forEach(line => {
-                  const doc = docs.find(doc => doc.value == line.deviceTime);
-                  line.mongoTime = mongoose.Types.ObjectId(doc._id)
-                    .getTimestamp()
-                    .getTime();
-                  File.instance.appendLine(line);
-                });
-              });
-          })
-          .catch(err => {
-            console.log(
-              "MongoDB connection error. Please make sure MongoDB is running. " +
-                err
-            );
-          });
-      }, 20000);
+  private constructor(mongoMessageDAO: MongoMessageDAO, dbMessageDAO: DBMessageDAO){
+    this._mongoMessageDAO = mongoMessageDAO;
+    this._dbMessageDAO = dbMessageDAO;
+  }
+
+  process(data: any, tenant: string, device: string) {
+    const fullMessage = FullMessage.instance(data);
+    this._messages.push(fullMessage);
+
+    if (fullMessage.isTheLastOne) {
+      
+      this._mongoMessageDAO.allBy(this._messages, tenant, device).then( (fromMongo: FullMessage[]) => {
+        this._dbMessageDAO.saveAll(fromMongo).then( (fromDB: FullMessage[]) => {
+          console.log(fromDB);
+        });
+      });
+    //   const waitingTime = 2000 + this._lines.length * 0.5;
+    //   console.log(
+    //     `waiting ${waitingTime / 1000} seconds for mongodb saving data`
+    //   );
+    //   setTimeout(() => {
+    //     mongoose
+    //       .connect(MONGODB_URI, { useMongoClient: true, poolSize: 1 })
+    //       .then(() => {
+    //         this._MessageModel = mongooseMessage(`${tenant}_${device}`);
+    //         const deviceTimes = this._lines.map(line => line.deviceTime);
+
+    //         this._MessageModel
+    //           .where("value")
+    //           .in(deviceTimes)
+    //           .then((docs: any[]) => {
+    //             console.log("Appending mongo results to file...");
+    //             let nResults = 0;
+    //             const instance = File.instance;
+    //             this._lines.forEach(line => {
+    //               nResults++;
+    //               if (nResults % 500 == 0) {
+    //                 console.log(`${nResults} were appended.`);
+    //               }
+    //               const doc = docs.find(doc => doc.value == line.deviceTime);
+    //               line.mongoTime = doc.saved_ts;
+    //               instance.appendLine(line);
+    //             });
+    //             instance.flush(true);
+    //             console.log(`${nResults} were appended.`);
+    //             console.log("... results were appened.");
+    //             mongoose.disconnect();
+    //           });
+    //       })
+    //       .catch(err => {
+    //         mongoose.disconnect();
+    //         console.log(
+    //           "MongoDB connection error. Please make sure MongoDB is running. " +
+    //             err
+    //         );
+    //       });
+    //   }, waitingTime);
     }
+  }
+
+  public static instance(mongoDAO: MongoMessageDAO, dbDAO: DBMessageDAO){
+    return new MessageProcessor(mongoDAO, dbDAO);
   }
 }

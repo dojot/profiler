@@ -4,6 +4,8 @@ import { DojotClient } from "../models/DojotClient";
 import { SocketClient } from "../models/SocketClient";
 import { BeamerClient } from "../models/BeamerClient";
 import { MessageProcessor } from "../models/MessageProcessor";
+import { DBMessageDAO } from "../daos/DBMessageDAO";
+import { MongoMessageDAO } from "../daos/MongoMessageDAO";
 
 export let create = (req: Request, res: Response) => {
   const server = req.body.server;
@@ -13,6 +15,8 @@ export let create = (req: Request, res: Response) => {
   const device = req.body.device;
   const messages = _.toInteger(req.body.messages);
   const perSecond = _.toInteger(req.body.perSecond);
+  const mongoDAO = new MongoMessageDAO();
+  const dbDAO = new DBMessageDAO();
 
   DojotClient.build()
     .withServer(server)
@@ -26,7 +30,7 @@ export let create = (req: Request, res: Response) => {
         .andDevice(device)
         .andToken(token)
         .createClient()
-        .andProcessMessageWith(new MessageProcessor())
+        .andProcessMessageWith(MessageProcessor.instance(mongoDAO, dbDAO))
         .start();
 
       BeamerClient.build()

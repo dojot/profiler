@@ -1,5 +1,7 @@
 FROM node:11.9.0-alpine
 
+RUN apk update && apk add build-base libtool autoconf automake
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
@@ -10,21 +12,13 @@ COPY . .
 
 RUN npm run build
 
-RUN apk update && apk add build-base libtool autoconf automake
-
 WORKDIR /usr/src/app/beamer
 
-RUN autoreconf --install
-
-RUN mkdir build
+RUN autoreconf --install && mkdir build
 
 WORKDIR /usr/src/app/beamer/build
 
-RUN ../configure
-
-RUN make && make install
-
-RUN mkdir /home/uploads
+RUN ../configure && make && make install && mkdir /home/uploads
 
 WORKDIR /usr/src/app
 

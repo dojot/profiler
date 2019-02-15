@@ -3,13 +3,12 @@ import fs = require("fs");
 import { Directory } from "./Directory";
 import logger from "../util/logger";
 
-
 export class BeamerClient {
   private _server: string;
   private _tenant: string;
   private _device: string;
-  private _perSecond: number;
   private _messages: number;
+  private _perSecond: number;
 
   private constructor() {}
 
@@ -50,7 +49,7 @@ export class BeamerClient {
           if (filename != "result.csv") {
             logger.debug(`change detected in file directory`);
             watcher.close();
-            Directory.listFiles((data) => {
+            Directory.listFiles(data => {
               resolve(data);
             });
           }

@@ -7,11 +7,15 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+      crossorigin="anonymous"
+    />
 
     <title>dojot</title>
     <link rel="shortcut icon" href="/images/favicon.ico" />
-
   </head>
   <body>
     <div id="app">
@@ -22,26 +26,28 @@
             <span class="text-muted">Fill in the data for the new test</span>
             <form class="form-inline col-10">
               <div class="form-group mb-2">
-                  <label for="server" class="sr-only">Server</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="server"
-                    id="server"
-                    placeholder="Server"
-                    required
-                  />
+                <label for="server" class="sr-only">Server</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="server"
+                  id="server"
+                  placeholder="Server"
+                  v-bind:value="form.server"
+                  required
+                />
               </div>
               <div class="form-group mb-2">
-                  <label for="username" class="sr-only">Username</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="username"
-                    id="username"
-                    placeholder="Username"
-                    required
-                  />
+                <label for="username" class="sr-only">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="username"
+                  id="username"
+                  placeholder="Username"
+                  v-bind:value="form.username"
+                  required
+                />
               </div>
               <div class="form-group mb-2">
                 <label for="password" class="sr-only">Password</label>
@@ -51,9 +57,10 @@
                   name="password"
                   id="password"
                   placeholder="Password"
+                  v-bind:value="form.password"
                   required
                 />
-            </div>
+              </div>
               <div class="form-group mb-2">
                 <label for="tenant" class="sr-only">Tenant</label>
                 <input
@@ -62,6 +69,7 @@
                   name="tenant"
                   id="tenant"
                   placeholder="Tenant"
+                  v-bind:value="form.tenant"
                   required
                 />
               </div>
@@ -73,6 +81,7 @@
                   id="device"
                   name="device"
                   placeholder="Device"
+                  v-bind:value="form.device"
                   required
                 />
               </div>
@@ -84,6 +93,7 @@
                   id="messages"
                   name="messages"
                   placeholder="Messages"
+                  v-bind:value="form.messages"
                   required
                 />
               </div>
@@ -95,22 +105,33 @@
                   id="per-second"
                   name="per-second"
                   placeholder="Per second"
+                  v-bind:value="form.perSecond"
                   required
                 />
               </div>
               <div class="form-group mb-2">
-                <button v-if="!running" id="create-test-button" type="button" onclick="createTest();" class="btn btn-secundary mb-2">
-                    Go!
+                <button
+                  v-if="!running"
+                  id="create-test-button"
+                  type="button"
+                  onclick="createTest();"
+                  class="btn btn-secundary mb-2"
+                >
+                  Go!
                 </button>
               </div>
-              <div v-if="running" class="mb-2 ml-2 spinner-grow" style="width: 2rem; height: 2rem;" role="status">
-                  <span class="sr-only">Loading...</span>
-              </div>              
+              <div
+                v-if="running"
+                class="mb-2 ml-2 spinner-grow"
+                style="width: 2rem; height: 2rem;"
+                role="status"
+              >
+                <span class="sr-only">Loading...</span>
+              </div>
             </form>
           </div>
         </div>
         <nav class="navbar navbar-light bg-light">
-          
           <button
             id="navbar-button"
             class="navbar-toggler"
@@ -124,10 +145,28 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="btn-group" role="group" aria-label="Options">
-              <button type="button" onclick="selectDataSource('socket');" class="btn btn-light">Socketio</button>
-              <button type="button" onclick="selectDataSource('mosca');" class="btn btn-light">Mosca</button>
-              <button type="button" onclick="selectDataSource('mongo');" class="btn btn-light">Mongo</button>
-            </div>
+            <button
+              type="button"
+              onclick="selectDataSource('socket');"
+              class="btn btn-light"
+            >
+              Socketio
+            </button>
+            <button
+              type="button"
+              onclick="selectDataSource('mosca');"
+              class="btn btn-light"
+            >
+              Mosca
+            </button>
+            <button
+              type="button"
+              onclick="selectDataSource('mongo');"
+              class="btn btn-light"
+            >
+              Mongo
+            </button>
+          </div>
           <div class="dropdown">
             <button
               class="btn btn-light dropdown-toggle"
@@ -140,16 +179,19 @@
               Files for Viewing
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              
-              <a onclick="selectFile(this)" v-bind:name="file.name" class="dropdown-item" href="#" v-for="file in files">
+              <a
+                onclick="selectFile(this)"
+                v-bind:name="file.name"
+                class="dropdown-item"
+                href="#"
+                v-for="file in files"
+              >
                 {{ file.formattedName }}
               </a>
-            
             </div>
           </div>
         </nav>
       </div>
-
 
       <div class="row w-100 mt-4">
         <div class="col-md-3 col-lg-2 offset-md-1">
@@ -163,9 +205,9 @@
             <div class="text-white text-center mt-2">
               <h3 v-if="!loading" id="sent-messages">{{ sent_messages }}</h3>
               <div v-if="loading" class="text-center">
-                  <div class="spinner-border mb-1" role="status">
-                    <span class="sr-only">Loading...</span>
-                  </div>
+                <div class="spinner-border mb-1" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
               </div>
             </div>
           </div>
@@ -179,11 +221,13 @@
               <h6>Total received</h6>
             </div>
             <div class="text-white text-center mt-2">
-              <h3 v-if="!loading" id="received-messages">{{ received_messages }}</h3>
+              <h3 v-if="!loading" id="received-messages">
+                {{ received_messages }}
+              </h3>
               <div v-if="loading" class="text-center">
-                  <div class="spinner-border mb-1" role="status">
-                    <span class="sr-only">Loading...</span>
-                  </div>
+                <div class="spinner-border mb-1" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
               </div>
             </div>
           </div>
@@ -195,11 +239,13 @@
             </div>
             <div class="text-white text-center mt-3"><h6>Out of order</h6></div>
             <div class="text-white text-center mt-2">
-              <h3 v-if="!loading" id="out-of-order-messages">{{ out_of_order_messages }}</h3>
+              <h3 v-if="!loading" id="out-of-order-messages">
+                {{ out_of_order_messages }}
+              </h3>
               <div v-if="loading" class="text-center">
-                  <div class="spinner-border mb-1" role="status">
-                    <span class="sr-only">Loading...</span>
-                  </div>
+                <div class="spinner-border mb-1" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
               </div>
             </div>
           </div>
@@ -215,9 +261,9 @@
             <div class="text-white text-center mt-2">
               <h3 v-if="!loading" id="delay">{{ delay_avarage }}</h3>
               <div v-if="loading" class="text-center">
-                  <div class="spinner-border mb-1" role="status">
-                    <span class="sr-only">Loading...</span>
-                  </div>
+                <div class="spinner-border mb-1" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
               </div>
             </div>
           </div>
@@ -233,9 +279,9 @@
             <div class="text-white text-center mt-2">
               <h3 v-if="!loading" id="derivation">{{ standard_derivation }}</h3>
               <div v-if="loading" class="text-center">
-                  <div class="spinner-border mb-1" role="status">
-                    <span class="sr-only">Loading...</span>
-                  </div>
+                <div class="spinner-border mb-1" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
               </div>
             </div>
           </div>
@@ -245,15 +291,27 @@
       <br /><br /><br />
 
       <div class="d-flex justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-9">
           <canvas id="delay-chart"></canvas>
         </div>
       </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+      integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+      crossorigin="anonymous"
+    ></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"
       integrity="sha256-o8aByMEvaNTcBsw94EfRLbBrJBI+c3mjna/j4LrfyJ8="
@@ -262,7 +320,6 @@
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 
     <script>
-
       var app = new Vue({
         el: "#app",
         data: {
@@ -277,17 +334,27 @@
           data_source: "socket",
           file_name: "",
           running: false,
-          loading: false
+          loading: false,
+          form: {
+            server: "",
+            username: "",
+            password: "",
+            tenant: "",
+            device: "",
+            messages: "",
+            perSecond: ""
+          }
         },
         created: () => {
           fetch("/file")
-          .then(response => {
-            response.json().then(data => {
-              app.files = data.files;
-            });
-          })
-          .then(success => console.log(success))
-          .catch(error => console.log(error));
+            .then(response => {
+              response.json().then(data => {
+                app.files = data.files;
+              });
+            })
+            .then(success => console.log(success))
+            .catch(error => console.log(error));
+          // getSavedFormData();  
         }
       });
 
@@ -301,7 +368,8 @@
               label: "Messages delay",
               data: app.delays,
               backgroundColor: "rgba(0, 123, 255, 1)",
-              borderWidth: 1
+              borderWidth: 1,
+              pointRadius: 0
             }
           ]
         },
@@ -314,19 +382,30 @@
                 }
               }
             ],
-            xAxes: [{
+            xAxes: [
+              {
                 ticks: {
-                    display: false
+                  display: false
                 }
-            }]
+              }
+            ]
           }
         }
       });
 
+      const getSavedFormData = () =>{
+        const server = document.getElementById("server");
+        const username = document.getElementById("username");
+        const password = document.getElementById("password");
+        const tenant = document.getElementById("tenant");
+        const device = document.getElementById("device");
+        const messages = document.getElementById("messages");
+        const perSecond = document.getElementById("per-second");
+      }
 
       const createTest = () => {
         navButton = document.getElementById("navbar-button");
-        testButton = document.getElementById("create-test-button"); 
+        testButton = document.getElementById("create-test-button");
         const server = document.getElementById("server");
         const username = document.getElementById("username");
         const password = document.getElementById("password");
@@ -335,7 +414,7 @@
         const messages = document.getElementById("messages");
         const perSecond = document.getElementById("per-second");
 
-        if(validateFields()){
+        if (validateFields()) {
           const formData = new FormData();
           formData.append("server", server.value);
           formData.append("username", username.value);
@@ -345,6 +424,8 @@
           formData.append("messages", messages.value);
           formData.append("perSecond", perSecond.value);
 
+          saveFormData(formData);
+
           testButton.innerHTML = "Running...";
           app.running = true;
           clearFieldsValidations();
@@ -353,56 +434,70 @@
             method: "POST",
             body: formData
           })
-          .then(response => {
-            response.json().then(data => {
-              app.files = data.files;
-              navButton.click();
-              setTimeout( () => {
+            .then(response => {
+              response.json().then(data => {
+                app.files = data.files;
+
+                navButton.click();
+                setTimeout(() => {
+                  testButton.innerHTML = "Go!";
+                  app.running = false;
+
+                  app.file_name = data.files.pop().name;
+                  console.log(data.files);
+                  updateResult();
+                }, 900);
+              });
+            })
+            .then(success => {
+              setTimeout(() => {
                 testButton.innerHTML = "Go!";
                 app.running = false;
               }, 900);
-              
+              console.log(success);
+            })
+            .catch(error => {
+              setTimeout(() => {
+                testButton.innerHTML = "Go!";
+                app.running = false;
+              }, 900);
+              console.log(error);
             });
-          })
-          .then(success => {
-            setTimeout( () => {
-                testButton.innerHTML = "Go!";
-                app.running = false;
-            }, 900);
-            console.log(success)
-          })
-          .catch(error => {
-            setTimeout( () => {
-                testButton.innerHTML = "Go!";
-                app.running = false;
-            }, 900);
-            console.log(error)
-          });
         }
-
       };
+
+      const saveFormData = formData => {
+          let localStorage = window.localStorage;
+          localStorage.setItem("server", formData.get("server"));
+          localStorage.setItem("username", formData.get("username"));
+          localStorage.setItem("password", formData.get("password"));
+          localStorage.setItem("tenant", formData.get("tenant"));
+          localStorage.setItem("device", formData.get("device"));
+          localStorage.setItem("messages", formData.get("messages"));
+          localStorage.setItem("perSecond", formData.get("perSecond"));
+      }
 
       const validateFields = () => {
         let formValid = true;
-        document.querySelectorAll('input[required]').forEach(e => {
-          if(e.value == undefined || e.value == ""){
-            formValid = false
+        document.querySelectorAll("input[required]").forEach(e => {
+          if (e.value == undefined || e.value == "") {
+            formValid = false;
             e.classList.remove("is-valid");
             e.classList.add("is-invalid");
-          }else{
+          } else {
             e.classList.remove("is-invalid");
             e.classList.add("is-valid");
           }
         });
         return formValid;
-      }
+      };
 
       const clearFieldsValidations = () => {
-        document.querySelectorAll('input[required]').forEach(e => {
+        document.querySelectorAll("input[required]").forEach(e => {
           e.classList.remove("is-valid");
           e.classList.remove("is-invalid");
         });
-      }
+      };
 
       const updateChart = chart => {
         chart.data.labels = app.device_ids;
@@ -413,17 +508,19 @@
         chart.update();
       };
 
-      const selectDataSource = (dataSource) => {
+      const selectDataSource = dataSource => {
         app.data_source = dataSource;
-        getResult();
-      }
+        if (app.file_name) {
+          updateResult();
+        }
+      };
 
-      const selectFile = (field) => {
-        app.file_name = field.getAttribute('name');
-        getResult();
-      }
+      const selectFile = field => {
+        app.file_name = field.getAttribute("name");
+        updateResult();
+      };
 
-      const getResult = () => {
+      const updateResult = () => {
         const formData = new FormData();
         formData.append("type", app.data_source);
         formData.append("fileName", app.file_name);
@@ -444,15 +541,14 @@
               app.sent_messages = data.total_sent_messages;
               app.received_messages = data.total_received_messages;
               updateChart(delayChart);
-              setTimeout( () => {
+              setTimeout(() => {
                 app.loading = false;
               }, 300);
             });
           })
           .then(success => console.log(success))
           .catch(error => console.log(error));
-      }
-      
+      };
     </script>
   </body>
 </html>

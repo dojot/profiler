@@ -1,11 +1,13 @@
 import express from "express";
-import compression from "compression";  // compresses requests
+import compression from "compression"; // compresses requests
 import session from "express-session";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import flash from "express-flash";
 import path from "path";
 import ejs from "ejs";
+import { Client } from "pg";
+
 import fileupload from "express-fileupload";
 import expressValidator from "express-validator";
 import { SESSION_SECRET } from "./util/secrets";
@@ -19,6 +21,7 @@ import * as socketController from "./controllers/socket-result";
 import * as moscaController from "./controllers/mosca-result";
 import * as mongoController from "./controllers/mongo-result";
 
+
 const app = express();
 
 app.set("port", process.env.PORT || 3000);
@@ -31,12 +34,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 app.use(fileupload());
 
-app.use(session({
-  resave: true,
-  saveUninitialized: true,
-  secret: SESSION_SECRET,
-}));
-
+app.use(
+  session({
+    resave: true,
+    saveUninitialized: true,
+    secret: SESSION_SECRET
+  })
+);
 
 app.use(flash());
 app.use((req, res, next) => {
@@ -54,5 +58,14 @@ app.get("/file", fileController.index);
 app.post("/socket_result", socketController.create);
 app.post("/mosca_result", moscaController.create);
 app.post("/mongo_result", mongoController.create);
+
+const client = new Client();
+
+client.connect();
+
+client.query("select * from testes", (err, res) => {
+  console.log("Entrou");
+  console.log(err ? err.stack : res);
+});
 
 export default app;

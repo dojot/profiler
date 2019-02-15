@@ -2,9 +2,24 @@ version: '3'
 services:
   web:
     build: .
+    environment:
+      PGUSER: dojot
+      PGPASSWORD: dojot
+      PGDATABASE: dojot
+      PGHOST: db
     command: npm run watch
     volumes:
       - .:/usr/src/app/
       - /usr/src/app/node_modules
     ports:
       - "3000:3000"
+  db:
+    image: "postgres:11.2-alpine"
+    environment:
+      POSTGRES_USER: dojot
+      POSTGRES_PASSWORD: dojot
+      POSTGRES_DB: dojot
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/postgres9/:/var/lib/postgresql/data
