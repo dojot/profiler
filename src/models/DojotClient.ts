@@ -1,44 +1,39 @@
 import request = require("request-promise");
 import logger from "../util/logger";
+import { FullTest } from "./FullTest";
 
 export class DojotClient {
-  private _server: string;
-  private _username: string;
-  private _password: string;
+  private _test: FullTest;
 
-  private constructor() {}
-
-  static build() {
-    return new DojotClient();
-  }
-
-  withServer(server: string) {
-    this._server = server;
+  forTest(test: FullTest){
+    this._test = test;
     return this;
   }
 
-  andUsername(username: string) {
-    this._username = username;
-    return this;
+  private get server(){
+    return this._test.host;
   }
 
-  andPassword(password: string) {
-    this._password = password;
-    return this;
+  private get username(){
+    return this._test.username;
+  }
+
+  private get password(){
+    return this._test.password;
   }
 
   getToken(resolve: Resolve) {
     request
-      .post(`http://${this._server}:8000/auth`, {
+      .post(`http://${this.server}:8000/auth`, {
         json: {
-          username: this._username,
-          passwd: this._password
+          username: this.username,
+          passwd: this.password
         }
       })
       .then(res => {
         logger.debug("User token has been recovered");
         request
-          .get(`http://${this._server}:8000/stream/socketio`, {
+          .get(`http://${this.server}:8000/stream/socketio`, {
             headers: {
               Authorization: `Bearer ${res.jwt}`
             }

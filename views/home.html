@@ -336,13 +336,13 @@
           running: false,
           loading: false,
           form: {
-            server: "",
-            username: "",
-            password: "",
-            tenant: "",
-            device: "",
-            messages: "",
-            perSecond: ""
+            server: "10.202.21.64",
+            username: "admin",
+            password: "admin",
+            tenant: "admin",
+            device: "54bf17",
+            messages: "10",
+            perSecond: "10"
           }
         },
         created: () => {
@@ -424,7 +424,7 @@
           formData.append("messages", messages.value);
           formData.append("perSecond", perSecond.value);
 
-          saveFormData(formData);
+          // saveFormData(formData);
 
           testButton.innerHTML = "Running...";
           app.running = true;

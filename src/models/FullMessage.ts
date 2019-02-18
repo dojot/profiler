@@ -7,18 +7,22 @@ export class FullMessage {
   private _mongoTime: number;
   private _socketTime: number;
 
-  private constructor(
+  constructor(
     deviceTime: number,
     moscaTime: number,
     socketTime: number,
     total: number,
-    last: boolean
+    last: boolean,
+    mongoTime?: number,
+    id?: number
   ) {
     this._deviceTime = deviceTime;
     this._moscaTime = moscaTime;
     this._socketTime = socketTime;
     this._last = last;
     this._total = total;
+    this._mongoTime = mongoTime;
+    this._id = id;
   }
 
   get content(): string {

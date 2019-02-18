@@ -3,6 +3,8 @@ import * as _ from "lodash";
 
 export class Test {
   private _messages: Message[] = [];
+  private _name: string;
+  private _id: number;
 
   constructor(messages: Message[] = []) {
     this._messages = messages;

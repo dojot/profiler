@@ -37,7 +37,7 @@ export class BeamerClient {
     return this;
   }
 
-  execute(resolve: Resolve) {
+  execute() {
     shell.exec(
       `mqtt-beamer ${this._server} ${this._tenant} ${this._device} ${
         this._perSecond
@@ -45,15 +45,15 @@ export class BeamerClient {
       { async: true },
       () => {
         logger.debug(`mqtt beamer sent all messages`);
-        const watcher = fs.watch("/home/uploads", (eventType, filename) => {
-          if (filename != "result.csv") {
-            logger.debug(`change detected in file directory`);
-            watcher.close();
-            Directory.listFiles(data => {
-              resolve(data);
-            });
-          }
-        });
+        // const watcher = fs.watch("/home/uploads", (eventType, filename) => {
+        //   if (filename != "result.csv") {
+        //     logger.debug(`change detected in file directory`);
+        //     watcher.close();
+        //     Directory.listFiles(data => {
+        //       resolve(data);
+        //     });
+        //   }
+        // });
       }
     );
   }

@@ -1,56 +1,48 @@
 import { SocketIoClient } from "./SocketioClient";
 import { MessageProcessor } from "./MessageProcessor";
+import { FullTest } from "./FullTest";
 
 export class SocketClient {
   private _token: string;
-  private _server: string;
-  private _tenant: string;
-  private _device: string;
+  private _test: FullTest;
   private _client: SocketIoClient;
 
-  private constructor() {}
-
-  withServer(server: string) {
-    this._server = server;
+  forTest(test: FullTest) {
+    this._test = test;
     return this;
   }
 
-  andToken(token: string) {
+  usingToken(token: string) {
     this._token = token;
     return this;
   }
 
-  andTenant(tenant: string) {
-    this._tenant = tenant;
-    return this;
+  private get server(): string {
+    return this._test.host;
   }
 
-  andDevice(device: string) {
-    this._device = device;
-    return this;
+  private get tenant(): string {
+    return this._test.tenant;
   }
 
-  static build() {
-    return new SocketClient();
+  private get device(): string {
+    return this._test.device;
   }
 
   createClient() {
     this._client = new SocketIoClient(
-      `http://${this._server}:8000`,
+      `http://${this.server}:8000`,
       1000,
       this._token.trim()
     );
     return this;
   }
 
-  andProcessMessageWith(processor: MessageProcessor) {
+  andProcesstWith(processor: MessageProcessor, resolve: Resolve) {
     this._client.onMessage((data: any) => {
-      processor.process(data, this._tenant, this._device);
+      console.log(`Executing on message with data ${data}`);
+      processor.process(data, resolve);
     });
-    return this;
-  }
-
-  start() {
     this._client.start();
     return this;
   }
@@ -59,4 +51,8 @@ export class SocketClient {
     this._client.close();
     return this;
   }
+}
+
+interface Resolve {
+  (): void;
 }

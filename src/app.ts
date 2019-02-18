@@ -1,5 +1,5 @@
 import express from "express";
-import compression from "compression"; // compresses requests
+import compression from "compression"; 
 import session from "express-session";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
@@ -58,14 +58,5 @@ app.get("/file", fileController.index);
 app.post("/socket_result", socketController.create);
 app.post("/mosca_result", moscaController.create);
 app.post("/mongo_result", mongoController.create);
-
-const client = new Client();
-
-client.connect();
-
-client.query("select * from testes", (err, res) => {
-  console.log("Entrou");
-  console.log(err ? err.stack : res);
-});
 
 export default app;

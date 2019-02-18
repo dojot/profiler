@@ -1,78 +1,57 @@
-import { File } from "./File";
 import { FullMessage } from "./FullMessage";
-import { MONGODB_URI } from "../util/secrets";
-import mongoose from "mongoose";
-import mongooseMessage from "./MongooseMessage";
 import { MongoMessageDAO } from "../daos/MongoMessageDAO";
 import { DBMessageDAO } from "../daos/DBMessageDAO";
+import { FullTest } from "./FullTest";
 
 export class MessageProcessor {
   private _messages: FullMessage[] = [];
-  private _MessageModel: mongoose.Model<mongoose.Document>;
+  private _test: FullTest;
   private _mongoMessageDAO: MongoMessageDAO;
   private _dbMessageDAO: DBMessageDAO;
 
-  private constructor(mongoMessageDAO: MongoMessageDAO, dbMessageDAO: DBMessageDAO){
-    this._mongoMessageDAO = mongoMessageDAO;
-    this._dbMessageDAO = dbMessageDAO;
+  forTest(test: FullTest) {
+    this._test = test;
+    return this;
   }
 
-  process(data: any, tenant: string, device: string) {
+  using(mongoMessageDAO: MongoMessageDAO) {
+    this._mongoMessageDAO = mongoMessageDAO;
+    return this;
+  }
+
+  and(dbMessageDAO: DBMessageDAO) {
+    this._dbMessageDAO = dbMessageDAO;
+    return this;
+  }
+
+  private get tenant() {
+    return this._test.tenant;
+  }
+
+  private get device() {
+    return this._test.device;
+  }
+
+  process(data: any, resolve: Resolve) {
+    console.log(`Getting message ${data}`);
     const fullMessage = FullMessage.instance(data);
     this._messages.push(fullMessage);
 
     if (fullMessage.isTheLastOne) {
-      
-      this._mongoMessageDAO.allBy(this._messages, tenant, device).then( (fromMongo: FullMessage[]) => {
-        this._dbMessageDAO.saveAll(fromMongo).then( (fromDB: FullMessage[]) => {
-          console.log(fromDB);
+      this._mongoMessageDAO
+        .allBy(this._messages, this.tenant, this.device)
+        .then((fromMongo: FullMessage[]) => {
+          this._dbMessageDAO
+            .saveAll(fromMongo, this._test)
+            .then((fromDB: FullMessage[]) => {
+              this._messages = null;
+              resolve();
+            });
         });
-      });
-    //   const waitingTime = 2000 + this._lines.length * 0.5;
-    //   console.log(
-    //     `waiting ${waitingTime / 1000} seconds for mongodb saving data`
-    //   );
-    //   setTimeout(() => {
-    //     mongoose
-    //       .connect(MONGODB_URI, { useMongoClient: true, poolSize: 1 })
-    //       .then(() => {
-    //         this._MessageModel = mongooseMessage(`${tenant}_${device}`);
-    //         const deviceTimes = this._lines.map(line => line.deviceTime);
-
-    //         this._MessageModel
-    //           .where("value")
-    //           .in(deviceTimes)
-    //           .then((docs: any[]) => {
-    //             console.log("Appending mongo results to file...");
-    //             let nResults = 0;
-    //             const instance = File.instance;
-    //             this._lines.forEach(line => {
-    //               nResults++;
-    //               if (nResults % 500 == 0) {
-    //                 console.log(`${nResults} were appended.`);
-    //               }
-    //               const doc = docs.find(doc => doc.value == line.deviceTime);
-    //               line.mongoTime = doc.saved_ts;
-    //               instance.appendLine(line);
-    //             });
-    //             instance.flush(true);
-    //             console.log(`${nResults} were appended.`);
-    //             console.log("... results were appened.");
-    //             mongoose.disconnect();
-    //           });
-    //       })
-    //       .catch(err => {
-    //         mongoose.disconnect();
-    //         console.log(
-    //           "MongoDB connection error. Please make sure MongoDB is running. " +
-    //             err
-    //         );
-    //       });
-    //   }, waitingTime);
     }
   }
+}
 
-  public static instance(mongoDAO: MongoMessageDAO, dbDAO: DBMessageDAO){
-    return new MessageProcessor(mongoDAO, dbDAO);
-  }
+interface Resolve {
+  (): void;
 }
