@@ -1,15 +1,20 @@
 import { Request, Response } from "express";
 import { Test } from "../models/Test";
-import { Message } from "../models/Message";
 import { MoscaMessage } from "../models/MoscaMessage";
-import { File } from "../models/File";
+import { DBMessageDAO } from "../daos/DBMessageDAO";
+import { Client } from "pg";
+import { FullMessage } from "../models/FullMessage";
 
 export let create = (req: Request, res: Response) => {
-  File.from(req.body.fileName)
-    .getLines(line => {
-      return MoscaMessage.instance(line);
-    })
-    .then((messages: Message[]) => {
-      res.json(new Test(messages).json);
+  const client = new Client();
+  client.connect();
+  const messageDAO = new DBMessageDAO(client);
+
+  messageDAO
+    .allByTestName(req.body.fileName)
+    .then((messages: FullMessage[]) => {
+      const moscaMessages = messages.map(m => MoscaMessage.instance(m));
+      res.json(new Test(moscaMessages).json);
+      client.end();
     });
 };

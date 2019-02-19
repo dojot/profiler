@@ -1,28 +1,29 @@
 import request = require("request-promise");
 import logger from "../util/logger";
 import { FullTest } from "./FullTest";
+import { SocketClient } from "./SocketClient";
 
 export class DojotClient {
   private _test: FullTest;
 
-  forTest(test: FullTest){
+  forTest(test: FullTest) {
     this._test = test;
     return this;
   }
 
-  private get server(){
+  private get server() {
     return this._test.host;
   }
 
-  private get username(){
+  private get username() {
     return this._test.username;
   }
 
-  private get password(){
+  private get password() {
     return this._test.password;
   }
 
-  getToken(resolve: Resolve) {
+  getSocketClient(resolve: Resolve) {
     request
       .post(`http://${this.server}:8000/auth`, {
         json: {
@@ -39,8 +40,8 @@ export class DojotClient {
             }
           })
           .then(res => {
-            logger.debug("Socketyio token has been recovered");
-            resolve(JSON.parse(res).token);
+            logger.debug("Socketio token has been recovered");
+            resolve(new SocketClient().usingToken(JSON.parse(res).token));
           })
           .catch(err => {
             logger.error(`Failed to recover socketio token: ${err.message}`);
@@ -53,5 +54,5 @@ export class DojotClient {
 }
 
 interface Resolve {
-  (token: string): void;
+  (socketClient: SocketClient): void;
 }

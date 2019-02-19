@@ -340,7 +340,7 @@
             username: "admin",
             password: "admin",
             tenant: "admin",
-            device: "54bf17",
+            device: "37f834",
             messages: "10",
             perSecond: "10"
           }
@@ -352,7 +352,7 @@
                 app.files = data.files;
               });
             })
-            .then(success => console.log(success))
+            .then(success => console.log("oi"))
             .catch(error => console.log(error));
           // getSavedFormData();  
         }
@@ -443,8 +443,7 @@
                   testButton.innerHTML = "Go!";
                   app.running = false;
 
-                  app.file_name = data.files.pop().name;
-                  console.log(data.files);
+                  app.file_name = data.files[0].name;
                   updateResult();
                 }, 900);
               });

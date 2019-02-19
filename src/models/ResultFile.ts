@@ -3,7 +3,7 @@ class ResultFile {
   private _name: string;
 
   public constructor(name: string) {
-    this._name = name;
+    this._name = name.trim();
   }
 
   public get name(): string {

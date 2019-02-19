@@ -75,4 +75,8 @@ export class FullTest {
   public addMessage(message: FullMessage) {
     this._messages.push(message);
   }
+
+  public set messages(messages: FullMessage[]) {
+    this._messages = messages;
+  }
 }

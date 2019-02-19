@@ -36,18 +36,18 @@ export class TestBuilder {
     return this;
   }
 
-  public andTotalMessagesOf(perSecond: number) {
-    this._perSecond = perSecond;
-    return this;
-  }
-
-  public andTotalSendPerSecondOf(totalMessages: number) {
+  public andTotalMessagesOf(totalMessages: number) {
     this._totalMessages = totalMessages;
     return this;
   }
 
-  createWith(dao: DBTestDAO) {
-    const newTest =  new FullTest(
+  public andTotalSendPerSecondOf(perSecond: number) {
+    this._perSecond = perSecond;
+    return this;
+  }
+
+  public persistWith(dao: DBTestDAO) {
+    const newTest = new FullTest(
       this.newName(),
       this._host,
       this._tenant,
@@ -61,7 +61,7 @@ export class TestBuilder {
     return dao.save(newTest);
   }
 
-  private newName(): string{
+  private newName(): string {
     const date = new Date();
     const day = date.getDate();
     const month = date.getMonth();

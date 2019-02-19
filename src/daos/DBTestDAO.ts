@@ -8,31 +8,39 @@ export class DBTestDAO {
     this._client = client;
   }
 
-  all(){
+  all() {
     return new Promise((resolve, reject) => {
-      let testes: FullTest[] = [];
-
+      const testes: FullTest[] = [];
       this._client.query(
-        "select * from tests order by name desc",
+        "select * from tests order by id desc",
         (err, result) => {
           if (err) {
             console.log(err);
             reject(err);
           } else {
             result.rows.forEach(row => {
-              testes.push(new FullTest(row.name, row.host, row.tenant, row.username, row.password, row.device, row.perSecond, row.totalMessages));
+              testes.push(
+                new FullTest(
+                  row.name,
+                  row.host,
+                  row.tenant,
+                  row.username,
+                  row.password,
+                  row.device,
+                  row.perSecond,
+                  row.totalMessages
+                )
+              );
             });
           }
           resolve(testes);
         }
       );
-
     });
   }
 
   save(test: FullTest) {
     return new Promise((resolve, reject) => {
-
       this._client.query(
         "insert into tests (name, host, tenant, username, device, total_messages, per_second) values ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
         [
@@ -53,9 +61,7 @@ export class DBTestDAO {
           }
           resolve(test);
         }
-        
       );
-
     });
   }
 }

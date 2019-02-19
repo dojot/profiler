@@ -1,6 +1,7 @@
 import { Client } from "pg";
 import { FullMessage } from "../models/FullMessage";
 import { FullTest } from "../models/FullTest";
+import logger from "../util/logger";
 
 export class DBMessageDAO {
   private _client: Client;
@@ -11,10 +12,10 @@ export class DBMessageDAO {
 
   allByTestName(name: string) {
     return new Promise((resolve, reject) => {
-      let messages: FullMessage[] = [];
+      const messages: FullMessage[] = [];
 
       this._client.query(
-        "select m.* from messages m join tests t on t.id = m.test_id where t.name = $1",
+        "select m.* from messages m join tests t on t.id = m.test_id where t.name = $1 order by id",
         [name],
         (err, result) => {
           if (err) {
@@ -24,12 +25,13 @@ export class DBMessageDAO {
             result.rows.forEach(row => {
               messages.push(
                 new FullMessage(
-                  row.device_time,
-                  row.mosca_time,
-                  row.socket_time,
+                  Number(row.device_time),
+                  Number(row.mosca_time),
+                  Number(row.socket_time),
+                  Number(row.send_order),
                   row.last_message,
                   row.total_messages,
-                  row.mongo_time,
+                  Number(row.mongo_time),
                   row.id
                 )
               );
@@ -43,30 +45,35 @@ export class DBMessageDAO {
 
   saveAll(messages: FullMessage[], test: FullTest) {
     return new Promise((resolve, reject) => {
+      let insert: string = "";
+      let count = 0;
       messages.forEach(message => {
-        this._client.query(
-          "insert into messages (device_time, mosca_time, socket_time, mongo_time, total_messages, last_massage) values ($1, $2, $3, $4, $5, $6) RETURNING id",
-          [
-            message.deviceTime,
-            message.moscaTime,
-            message.socketTime,
-            message.mongoTime,
-            message.total,
-            message.last
-          ],
-          (err, result) => {
-            if (err) {
-              console.log(err);
-              reject(err);
-            } else {
-              message.id = result.rows[0].id;
-              test.addMessage(message);
-            }
-          }
-        );
+        insert += `(${message.deviceTime},${message.moscaTime},${
+          message.socketTime
+        },${message.mongoTime},${message.sendOrder},${message.total},${
+          message.last
+        },${test.id}),`;
+        count++;
+        if(count % 500 == 0){
+          logger.debug(`Formatted ${count} messages`);
+        }
       });
-
-      resolve(messages);
+      this._client.query(
+        `insert into messages (device_time, mosca_time, socket_time, mongo_time, send_order, total_messages, last_message, test_id) values ${insert.slice(
+          0,
+          -1
+        )} RETURNING id`,
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            test.messages = messages;
+            logger.debug(`Saved ${messages.length} messages`);
+            resolve(messages);
+          }
+        }
+      );
     });
   }
 }

@@ -48,16 +48,14 @@ export class Test {
 
   get outOfOrderMessages() {
     let total = 0;
-    const devicesTime = this.messages.map(m => m.sendTimestamp);
-    const devicesTimeOrdered = this.messages.map(m => m.sendTimestamp).sort();
+    const sendOrder = this.messages.map(m => m.sendOrder);
+    const sendOrdered = this.messages.map(m => m.sendOrder).sort( (a, b) => a - b );
 
     this.messages.forEach(message => {
-      const deviceTimeIndex = devicesTime.indexOf(message.sendTimestamp);
-      const deviceTimeOrderedIndex = devicesTimeOrdered.indexOf(
-        message.sendTimestamp
-      );
+      const sendOrderIndex = sendOrder.indexOf(message.sendOrder);
+      const sendOrderedIndex = sendOrdered.indexOf(message.sendOrder);
 
-      if (deviceTimeIndex != deviceTimeOrderedIndex) {
+      if (sendOrderIndex != sendOrderedIndex) {
         total += 1;
       }
     });

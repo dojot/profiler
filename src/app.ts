@@ -1,12 +1,11 @@
 import express from "express";
-import compression from "compression"; 
+import compression from "compression";
 import session from "express-session";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import flash from "express-flash";
 import path from "path";
 import ejs from "ejs";
-import { Client } from "pg";
 
 import fileupload from "express-fileupload";
 import expressValidator from "express-validator";
@@ -20,7 +19,6 @@ import * as fileController from "./controllers/file";
 import * as socketController from "./controllers/socket-result";
 import * as moscaController from "./controllers/mosca-result";
 import * as mongoController from "./controllers/mongo-result";
-
 
 const app = express();
 

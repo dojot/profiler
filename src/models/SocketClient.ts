@@ -29,7 +29,7 @@ export class SocketClient {
     return this._test.device;
   }
 
-  createClient() {
+  public createClient() {
     this._client = new SocketIoClient(
       `http://${this.server}:8000`,
       1000,
@@ -38,9 +38,8 @@ export class SocketClient {
     return this;
   }
 
-  andProcesstWith(processor: MessageProcessor, resolve: Resolve) {
+  public whenReceiveMessage(processor: MessageProcessor, resolve: Resolve) {
     this._client.onMessage((data: any) => {
-      console.log(`Executing on message with data ${data}`);
       processor.process(data, resolve);
     });
     this._client.start();

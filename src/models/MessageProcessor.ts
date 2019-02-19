@@ -33,7 +33,6 @@ export class MessageProcessor {
   }
 
   process(data: any, resolve: Resolve) {
-    console.log(`Getting message ${data}`);
     const fullMessage = FullMessage.instance(data);
     this._messages.push(fullMessage);
 
@@ -44,7 +43,7 @@ export class MessageProcessor {
           this._dbMessageDAO
             .saveAll(fromMongo, this._test)
             .then((fromDB: FullMessage[]) => {
-              this._messages = null;
+              this._messages = undefined;
               resolve();
             });
         });

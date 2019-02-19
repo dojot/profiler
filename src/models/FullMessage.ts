@@ -2,6 +2,7 @@ export class FullMessage {
   private _id: number;
   private _total: number;
   private _last: boolean = false;
+  private _sendOrder: number;
   private _deviceTime: number;
   private _moscaTime: number;
   private _mongoTime: number;
@@ -11,14 +12,16 @@ export class FullMessage {
     deviceTime: number,
     moscaTime: number,
     socketTime: number,
-    total: number,
+    sendOrder: number,
     last: boolean,
+    total: number,
     mongoTime?: number,
     id?: number
   ) {
     this._deviceTime = deviceTime;
     this._moscaTime = moscaTime;
     this._socketTime = socketTime;
+    this._sendOrder = sendOrder;
     this._last = last;
     this._total = total;
     this._mongoTime = mongoTime;
@@ -51,15 +54,19 @@ export class FullMessage {
     return this._socketTime;
   }
 
+  get sendOrder(): number {
+    return this._sendOrder;
+  }
+
   get total(): number {
     return this._total;
   }
 
-  get last(): boolean{
+  get last(): boolean {
     return this._last;
   }
 
-  get id(): number{
+  get id(): number {
     return this._id;
   }
 
@@ -72,13 +79,13 @@ export class FullMessage {
   }
 
   public static instance(data: any): FullMessage {
-    const socketTime = new Date().getTime();
     return new FullMessage(
       Number(data.attrs.perf),
       Number(data.metadata.timestamp),
-      socketTime,
-      data.attrs.total_messages,
-      data.attrs.last_message
+      new Date().getTime(),
+      Number(data.attrs.send_order),
+      data.attrs.last_message,
+      data.attrs.total_messages
     );
   }
 }

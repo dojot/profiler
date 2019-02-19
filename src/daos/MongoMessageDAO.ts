@@ -4,46 +4,42 @@ import mongoose from "mongoose";
 import mongooseMessage from "../models/MongooseMessage";
 
 export class MongoMessageDAO {
-
   allBy(messages: FullMessage[], tenant: string, device: string) {
-    return new Promise( (resolve, reject) =>{
-        const waitingTime = 2000 + messages.length * 0.5;
-        console.log(
-            `waiting ${waitingTime / 1000} seconds for mongodb saving data...`
-        );
-        setTimeout(() => {
-            mongoose
-            .connect(MONGODB_URI, { useMongoClient: true, poolSize: 1 })
-            .then(() => {
-                const messageModel = mongooseMessage(`${tenant}_${device}`);
-                const deviceTimes = messages.map(message => message.deviceTime);
+    return new Promise((resolve, reject) => {
+      const waitingTime = 2000 + messages.length * 0.5;
+      console.log(
+        `waiting ${waitingTime / 1000} seconds for mongodb saving data...`
+      );
+      setTimeout(() => {
+        mongoose
+          .connect(MONGODB_URI, { useMongoClient: true, poolSize: 1 })
+          .then(() => {
+            const messageModel = mongooseMessage(`${tenant}_${device}`);
+            const deviceTimes = messages.map(message => message.deviceTime);
 
-                messageModel
-                .where("value")
-                .in(deviceTimes)
-                .then((docs: any[]) => {
-                    console.log("Messages got from mongodb...");
-                    let nResults = 0;
-                    messages.forEach(message => {   
-                        const doc = docs.find(doc => doc.value == message.deviceTime);
-                        message.mongoTime = doc.saved_ts; 
-                    });
-                    
-                    resolve(messages);
-                    mongoose.disconnect();
+            messageModel
+              .where("value")
+              .in(deviceTimes)
+              .then((docs: any[]) => {
+                console.log("Messages got from mongodb...");
+                messages.forEach(message => {
+                  const doc = docs.find(doc => doc.value == message.deviceTime);
+                  message.mongoTime = doc.saved_ts;
                 });
-            })
-            .catch(err => {
-                mongoose.disconnect();
-                console.log(
-                "MongoDB connection error. Please make sure MongoDB is running. " +
-                    err
-                );
-                reject(err);
-            });
-        }, waitingTime);
 
-    });  
-    
+                resolve(messages);
+                mongoose.disconnect();
+              });
+          })
+          .catch(err => {
+            mongoose.disconnect();
+            console.log(
+              "MongoDB connection error. Please make sure MongoDB is running. " +
+                err
+            );
+            reject(err);
+          });
+      }, waitingTime);
+    });
   }
 }

@@ -1,68 +1,44 @@
 import shell = require("shelljs");
-import fs = require("fs");
-import { Directory } from "./Directory";
+import { FullTest } from "./FullTest";
 import logger from "../util/logger";
 
 export class BeamerClient {
-  private _server: string;
-  private _tenant: string;
-  private _device: string;
-  private _messages: number;
-  private _perSecond: number;
+  private _test: FullTest;
 
-  private constructor() {}
-
-  withServer(server: string) {
-    this._server = server;
+  forTest(test: FullTest) {
+    this._test = test;
     return this;
   }
 
-  andTenant(tenant: string) {
-    this._tenant = tenant;
-    return this;
+  get server(): string {
+    return this._test.host;
   }
 
-  andDevice(device: string) {
-    this._device = device;
-    return this;
+  get tenant(): string {
+    return this._test.tenant;
   }
 
-  andTotalSendPerSecondOf(perSecond: number) {
-    this._perSecond = perSecond;
-    return this;
+  get device(): string {
+    return this._test.device;
   }
 
-  andTotalMessagesOf(messages: number) {
-    this._messages = messages;
-    return this;
+  get perSecond(): number {
+    return this._test.perSecond;
+  }
+
+  get totalMessages(): number {
+    return this._test.totalMessages;
   }
 
   execute() {
     shell.exec(
-      `mqtt-beamer ${this._server} ${this._tenant} ${this._device} ${
-        this._perSecond
-      } ${this._messages}`,
+      `mqtt-beamer ${this.server} ${this.tenant} ${this.device} ${
+        this.perSecond
+      } ${this.totalMessages}`,
       { async: true },
       () => {
         logger.debug(`mqtt beamer sent all messages`);
-        // const watcher = fs.watch("/home/uploads", (eventType, filename) => {
-        //   if (filename != "result.csv") {
-        //     logger.debug(`change detected in file directory`);
-        //     watcher.close();
-        //     Directory.listFiles(data => {
-        //       resolve(data);
-        //     });
-        //   }
-        // });
       }
     );
   }
-
-  static build() {
-    return new BeamerClient();
-  }
-}
-
-interface Resolve {
-  (data: string): void;
 }
