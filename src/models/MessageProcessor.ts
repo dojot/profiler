@@ -43,7 +43,7 @@ export class MessageProcessor {
           this._dbMessageDAO
             .saveAll(fromMongo, this._test)
             .then((fromDB: FullMessage[]) => {
-              this._messages = undefined;
+              this._messages = [];
               resolve();
             });
         });
