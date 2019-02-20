@@ -222,7 +222,7 @@
             </div>
             <div class="text-white text-center mt-2">
               <h3 v-if="!loading" id="received-messages">
-                {{ received_messages }}
+                {{ received_messages }} / {{ avarage_received_rate }}
               </h3>
               <div v-if="loading" class="text-center">
                 <div class="spinner-border mb-1" role="status">
@@ -329,6 +329,7 @@
           sent_messages: "--",
           received_messages: "--",
           delay_avarage: "--",
+          avarage_received_rate: "--",
           standard_derivation: "--",
           out_of_order_messages: "--",
           data_source: "socket",
@@ -336,13 +337,13 @@
           running: false,
           loading: false,
           form: {
-            server: "10.202.21.64",
+            server: "10.202.21.218",
             username: "admin",
             password: "admin",
             tenant: "admin",
-            device: "37f834",
-            messages: "10",
-            perSecond: "10"
+            device: "21809f",
+            messages: "25000",
+            perSecond: "500"
           }
         },
         created: () => {
@@ -535,6 +536,7 @@
               app.device_ids = data.device_ids;
               app.delays = data.delays;
               app.delay_avarage = data.delay_avarage;
+              app.avarage_received_rate = data.avarage_received_rate;
               app.standard_derivation = data.standard_derivation;
               app.out_of_order_messages = data.out_of_order_messages;
               app.sent_messages = data.total_sent_messages;

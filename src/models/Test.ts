@@ -67,11 +67,22 @@ export class Test {
     return this.messages[0].totalSentMessages;
   }
 
+  get averageReceivedRate(): number {
+    return _.round((this.totalMessages / this.totalReceivedTime) * 1000, 2);
+  }
+
+  get totalReceivedTime(): number{
+    const firstTime = this.messages[0].getTimestamp;
+    const lastTime = this.messages[this.messages.length - 1].getTimestamp;
+    return lastTime - firstTime;
+  }
+
   get json() {
     return {
-      device_ids: this.messages.map(message => message.sendTime.toString()),
+      device_ids: this.messages.map(message => `${message.sendOrder} (${message.getTime})`),
       delays: this.messages.map(message => message.delay),
       delay_avarage: this.delayAvarage,
+      avarage_received_rate: this.averageReceivedRate,
       standard_derivation: this.standardDerivation,
       out_of_order_messages: this.outOfOrderMessages,
       total_received_messages: this.totalMessages,
