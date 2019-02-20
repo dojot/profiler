@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-export class Message {
+export abstract class Message {
   private _sendTime: Date;
   private _getTime: Date;
   private _sendOrder: number;
