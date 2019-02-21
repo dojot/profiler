@@ -1,4 +1,3 @@
-import { Message } from "../../src/models/Message";
 import { FullMessage } from "../../src/models/FullMessage";
 import { MongoMessage } from "../../src/models/MongoMessage";
 import { expect } from 'chai';

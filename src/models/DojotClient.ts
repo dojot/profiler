@@ -23,8 +23,9 @@ export class DojotClient {
     return this._test.password;
   }
 
-  getSocketClient(resolve: Resolve) {
-    request
+  getSocketClient(): Promise<SocketClient> {
+    return new Promise((resolve, reject) => {
+      request
       .post(`http://${this.server}:8000/auth`, {
         json: {
           username: this.username,
@@ -45,11 +46,15 @@ export class DojotClient {
           })
           .catch(err => {
             logger.error(`Failed to recover socketio token: ${err.message}`);
+            reject(err);
           });
       })
       .catch(err => {
         logger.error(`Failed to recover user token: ${err.message}`);
+        reject(err);
       });
+    });
+    
   }
 }
 

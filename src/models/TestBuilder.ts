@@ -46,7 +46,7 @@ export class TestBuilder {
     return this;
   }
 
-  public persistWith(dao: DBTestDAO) {
+  public get instance() {
     const newTest = new FullTest(
       this.newName(),
       this._host,
@@ -58,7 +58,7 @@ export class TestBuilder {
       this._totalMessages
     );
 
-    return dao.save(newTest);
+    return newTest;
   }
 
   private newName(): string {

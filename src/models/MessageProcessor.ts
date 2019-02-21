@@ -24,6 +24,10 @@ export class MessageProcessor {
     return this;
   }
 
+  private get host() {
+    return this._test.host;
+  }
+
   private get tenant() {
     return this._test.tenant;
   }
@@ -38,7 +42,7 @@ export class MessageProcessor {
 
     if (fullMessage.isTheLastOne) {
       this._mongoMessageDAO
-        .allBy(this._messages, this.tenant, this.device)
+        .allBy(this._messages, this.host, this.tenant, this.device)
         .then((fromMongo: FullMessage[]) => {
           this._dbMessageDAO
             .saveAll(fromMongo, this._test)

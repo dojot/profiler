@@ -38,7 +38,7 @@ export class SocketClient {
     return this;
   }
 
-  public whenReceiveMessage(processor: MessageProcessor, resolve: Resolve) {
+  public processMessageWith(processor: MessageProcessor, resolve: Resolve) {
     this._client.onMessage((data: any) => {
       processor.process(data, resolve);
     });

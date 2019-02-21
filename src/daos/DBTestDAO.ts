@@ -8,7 +8,7 @@ export class DBTestDAO {
     this._client = client;
   }
 
-  all() {
+  all(): Promise<FullTest[]> {
     return new Promise((resolve, reject) => {
       const testes: FullTest[] = [];
       this._client.query(
@@ -39,7 +39,7 @@ export class DBTestDAO {
     });
   }
 
-  save(test: FullTest) {
+  save(test: FullTest): Promise<FullTest> {
     return new Promise((resolve, reject) => {
       this._client.query(
         "insert into tests (name, host, tenant, username, device, total_messages, per_second) values ($1, $2, $3, $4, $5, $6, $7) RETURNING id",

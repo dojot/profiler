@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import mongooseMessage from "../models/MongooseMessage";
 
 export class MongoMessageDAO {
-  allBy(messages: FullMessage[], tenant: string, device: string) {
+  allBy(messages: FullMessage[], host: string, tenant: string, device: string) {
     return new Promise((resolve, reject) => {
       const waitingTime = 2000 + messages.length * 0.5;
       console.log(
@@ -12,7 +12,7 @@ export class MongoMessageDAO {
       );
       setTimeout(() => {
         mongoose
-          .connect(MONGODB_URI, { useMongoClient: true, poolSize: 1 })
+          .connect(`mongodb://${host}:27017/device_history`, { useMongoClient: true, poolSize: 1 })
           .then(() => {
             const messageModel = mongooseMessage(`${tenant}_${device}`);
             const deviceTimes = messages.map(message => message.deviceTime);
