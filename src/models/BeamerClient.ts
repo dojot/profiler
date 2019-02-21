@@ -1,6 +1,7 @@
 import shell = require("shelljs");
 import { FullTest } from "./FullTest";
 import logger from "../util/logger";
+import dns from "dns";
 
 export class BeamerClient {
   private _test: FullTest;
@@ -31,14 +32,18 @@ export class BeamerClient {
   }
 
   execute() {
-    shell.exec(
-      `mqtt-beamer ${this.server} ${this.tenant} ${this.device} ${
-        this.perSecond
-      } ${this.totalMessages}`,
-      { async: true },
-      () => {
-        logger.debug(`mqtt beamer sent all messages`);
-      }
-    );
+    dns.lookup(this.server, (err, ip) => {
+      logger.debug(`dns ${this.server} translated to ${ip}`);
+      shell.exec(
+        `mqtt-beamer ${ip} ${this.tenant} ${this.device} ${
+          this.perSecond
+        } ${this.totalMessages}`,
+        { async: true },
+        () => {
+          logger.debug(`mqtt beamer sent all messages`);
+        }
+      );
+    })
+    
   }
 }
