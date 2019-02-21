@@ -17,11 +17,11 @@ export let create = async (req: Request, res: Response) => {
   const messages = _.toInteger(req.body.messages);
   const perSecond = _.toInteger(req.body.perSecond);
 
-  const pgClient = new Client();
-  pgClient.connect();
-  const testDAO = new DBTestDAO(pgClient);
+  const dbClient = new Client();
+  dbClient.connect();
+  const testDAO = new DBTestDAO(dbClient);
   const mongoMessageDAO = new MongoMessageDAO();
-  const messageDAO = new DBMessageDAO(pgClient);
+  const messageDAO = new DBMessageDAO(dbClient);
 
   const whenFinish = async () => {
     const tests = await testDAO.all();
@@ -30,7 +30,7 @@ export let create = async (req: Request, res: Response) => {
     });
 
     socketClient.close();
-    pgClient.end();
+    dbClient.end();
   };
 
   const newTest = test()
@@ -42,23 +42,18 @@ export let create = async (req: Request, res: Response) => {
     .andTotalMessagesOf(messages)
     .andTotalSendPerSecondOf(perSecond).instance;
 
-  const savedTest = await testDAO.save(newTest);
-  const socketClient = await dojotClient()
-    .forTest(savedTest)
-    .getSocketClient();
+  const myTest = await testDAO.save(newTest);
+  const socketClient = await dojotClient().createSocketClientFor(myTest);
 
   socketClient
-    .forTest(savedTest)
-    .createClient()
     .processMessageWith(
       messageProcessor()
-        .forTest(savedTest)
+        .thatProcesses(myTest)
         .using(mongoMessageDAO)
         .and(messageDAO),
       whenFinish
     );
 
   beamerClient()
-    .forTest(savedTest)
-    .execute();
+    .execute(myTest);
 };

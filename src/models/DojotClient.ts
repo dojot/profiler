@@ -4,45 +4,27 @@ import { FullTest } from "./FullTest";
 import { SocketClient } from "./SocketClient";
 
 export class DojotClient {
-  private _test: FullTest;
-
-  forTest(test: FullTest) {
-    this._test = test;
-    return this;
-  }
-
-  private get server() {
-    return this._test.host;
-  }
-
-  private get username() {
-    return this._test.username;
-  }
-
-  private get password() {
-    return this._test.password;
-  }
-
-  getSocketClient(): Promise<SocketClient> {
+  createSocketClientFor(test: FullTest): Promise<SocketClient> {
     return new Promise((resolve, reject) => {
       request
-      .post(`http://${this.server}:8000/auth`, {
+      .post(`http://${test.host}:8000/auth`, {
         json: {
-          username: this.username,
-          passwd: this.password
+          username: test.username,
+          passwd: test.password
         }
       })
       .then(res => {
         logger.debug("User token has been recovered");
         request
-          .get(`http://${this.server}:8000/stream/socketio`, {
+          .get(`http://${test.host}:8000/stream/socketio`, {
             headers: {
               Authorization: `Bearer ${res.jwt}`
             }
           })
           .then(res => {
+            const socketClient = new SocketClient().forTest(test).usingToken(JSON.parse(res).token).createClient();
             logger.debug("Socketio token has been recovered");
-            resolve(new SocketClient().usingToken(JSON.parse(res).token));
+            resolve(socketClient);
           })
           .catch(err => {
             logger.error(`Failed to recover socketio token: ${err.message}`);
@@ -56,8 +38,4 @@ export class DojotClient {
     });
     
   }
-}
-
-interface Resolve {
-  (socketClient: SocketClient): void;
 }

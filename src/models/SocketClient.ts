@@ -7,7 +7,7 @@ export class SocketClient {
   private _test: FullTest;
   private _client: SocketIoClient;
 
-  forTest(test: FullTest) {
+  forTest(test: FullTest){
     this._test = test;
     return this;
   }
@@ -19,14 +19,6 @@ export class SocketClient {
 
   private get server(): string {
     return this._test.host;
-  }
-
-  private get tenant(): string {
-    return this._test.tenant;
-  }
-
-  private get device(): string {
-    return this._test.device;
   }
 
   public createClient() {

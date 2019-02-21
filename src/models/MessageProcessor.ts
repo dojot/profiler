@@ -9,7 +9,7 @@ export class MessageProcessor {
   private _mongoMessageDAO: MongoMessageDAO;
   private _dbMessageDAO: DBMessageDAO;
 
-  forTest(test: FullTest) {
+  thatProcesses(test: FullTest) {
     this._test = test;
     return this;
   }
