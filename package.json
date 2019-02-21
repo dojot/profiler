@@ -1,10 +1,10 @@
 {
-  "name": "dojot-performance",
+  "name": "dojot-profiler",
   "version": "0.1.0",
   "description": "Performance tool for dojot platform",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dojot/dojot-performance"
+    "url": "https://github.com/andersonluisribeiro/dojot-profiler"
   },
   "author": "Dojot",
   "license": "MIT",
