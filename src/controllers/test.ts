@@ -29,7 +29,6 @@ export let create = async (req: Request, res: Response) => {
       files: format(tests)
     });
 
-    socketClient.close();
     dbClient.end();
   };
 
@@ -50,6 +49,7 @@ export let create = async (req: Request, res: Response) => {
       messageProcessor()
         .thatProcesses(myTest)
         .using(mongoMessageDAO)
+        .withSocket(socketClient)
         .and(messageDAO),
       whenFinish
     );

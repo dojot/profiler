@@ -2,9 +2,11 @@ import { FullMessage } from "./FullMessage";
 import { MongoMessageDAO } from "../daos/MongoMessageDAO";
 import { DBMessageDAO } from "../daos/DBMessageDAO";
 import { FullTest } from "./FullTest";
+import { SocketClient } from "./SocketClient";
 
 export class MessageProcessor {
   private _messages: FullMessage[] = [];
+  private _socketClient: SocketClient;
   private _test: FullTest;
   private _mongoMessageDAO: MongoMessageDAO;
   private _dbMessageDAO: DBMessageDAO;
@@ -16,6 +18,11 @@ export class MessageProcessor {
 
   using(mongoMessageDAO: MongoMessageDAO) {
     this._mongoMessageDAO = mongoMessageDAO;
+    return this;
+  }
+
+  withSocket(socket: SocketClient){
+    this._socketClient = socket;
     return this;
   }
 
@@ -41,6 +48,8 @@ export class MessageProcessor {
     this._messages.push(fullMessage);
 
     if (fullMessage.isTheLastOne) {
+      this._socketClient.close();
+
       this._mongoMessageDAO
         .allBy(this._messages, this.host, this.tenant, this.device)
         .then((fromMongo: FullMessage[]) => {
