@@ -16,6 +16,14 @@
 
     <title>dojot</title>
     <link rel="shortcut icon" href="/images/favicon.ico" />
+    <style>
+      ::-webkit-scrollbar { 
+        width: 0px!important;
+      } 
+      body {
+        overflow-y:hidden;
+      }
+    </style>
   </head>
   <body>
     <div id="app">
@@ -287,14 +295,42 @@
           </div>
         </div>
       </div>
-
-      <br /><br /><br />
-
+      
+      <br><br><br>
       <div class="d-flex justify-content-center">
         <div class="col-md-9">
           <canvas id="delay-chart"></canvas>
         </div>
-      </div>
+      
+      <!-- <div class="col-md-3">
+          <div class="progress">
+              <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>Total Enviado</td>
+              <td>
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </table>
+      </div> -->
     </div>
 
     <script
@@ -337,13 +373,13 @@
           running: false,
           loading: false,
           form: {
-            server: "10.202.21.218",
-            username: "admin",
-            password: "admin",
-            tenant: "admin",
-            device: "21809f",
-            messages: "25000",
-            perSecond: "500"
+            server: "iotmid04.cpqd.com.br",
+            username: "jamal",
+            password: "temppwd",
+            tenant: "jamal",
+            device: "fae1fc",
+            messages: "10",
+            perSecond: "10"
           }
         },
         created: () => {
@@ -353,7 +389,7 @@
                 app.files = data.files;
               });
             })
-            .then(success => console.log("oi"))
+            .then(success => console.log("finished"))
             .catch(error => console.log(error));
           // getSavedFormData();  
         }
