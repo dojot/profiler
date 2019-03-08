@@ -10,7 +10,7 @@ export class DBMessageDAO {
     this._client = client;
   }
 
-  allByTestName(name: string) {
+  allByTestName(name: string): Promise<FullMessage[]> {
     return new Promise((resolve, reject) => {
       const messages: FullMessage[] = [];
 

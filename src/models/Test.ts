@@ -1,13 +1,16 @@
 import { Message } from "./Message";
 import * as _ from "lodash";
+import { FullTest } from "./FullTest";
 
 export class Test {
   private _messages: Message[] = [];
+  private _fullTest: FullTest;
   private _name: string;
   private _id: number;
 
-  constructor(messages: Message[] = []) {
+  constructor(messages: Message[] = [], fullTest?: FullTest) {
     this._messages = messages;
+    this._fullTest = fullTest;
   }
 
   public addMessage(message: Message) {
@@ -77,12 +80,17 @@ export class Test {
     return lastTime - firstTime;
   }
 
+  get totalSentPerSecond(): number{
+    return this._fullTest.perSecond;
+  }
+
   get json() {
     return {
-      device_ids: this.messages.map(message => `${message.sendOrder} (${message.getTime})`),
-      delays: this.messages.map(message => message.delay),
+      //device_ids: this.messages.map(message => `${message.sendOrder} (${message.getTime})`),
+     // delays: this.messages.map(message => message.delay),
       delay_avarage: this.delayAvarage,
       avarage_received_rate: this.averageReceivedRate,
+      total_sent_per_second: this.totalSentPerSecond,
       standard_derivation: this.standardDerivation,
       out_of_order_messages: this.outOfOrderMessages,
       total_received_messages: this.totalMessages,

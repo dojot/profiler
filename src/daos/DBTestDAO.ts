@@ -39,6 +39,36 @@ export class DBTestDAO {
     });
   }
 
+  byName(name: string): Promise<FullTest> {
+    return new Promise((resolve, reject) => {
+      let test: FullTest;
+      this._client.query(
+        "select * from tests where name = $1",
+        [name],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            result.rows.forEach(row => {
+              test = new FullTest(
+                row.name,
+                row.host,
+                row.tenant,
+                row.username,
+                row.password,
+                row.device,
+                row.perSecond,
+                row.totalMessages
+              );
+            });
+          }
+          resolve(test);
+        }
+      );
+    });
+  }
+
   save(test: FullTest): Promise<FullTest> {
     return new Promise((resolve, reject) => {
       this._client.query(
