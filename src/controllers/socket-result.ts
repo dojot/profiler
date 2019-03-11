@@ -4,15 +4,13 @@ import { SocketMessage } from "../models/SocketMessage";
 import { DBMessageDAO } from "../daos/DBMessageDAO";
 import { DBTestDAO } from "../daos/DBTestDAO";
 import { Client } from "pg";
-import { FullMessage } from "../models/FullMessage";
 
 export let create = async (req: Request, res: Response) => {
-  const client = new Client();
-  client.connect();
-  
   const fileName = req.body.fileName;
+  const client = new Client();
   const messageDAO = new DBMessageDAO(client);
   const testDAO = new DBTestDAO(client);
+  client.connect();
 
   const fullTest = await testDAO.byName(fileName);
   const messages = await messageDAO.allByTestName(req.body.fileName);

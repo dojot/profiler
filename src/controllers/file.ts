@@ -14,7 +14,7 @@ export let index = (req: Request, res: Response) => {
       client.end();
 
       const data = tests.map(t => {
-        const result = new ResultFile(t.name);
+        const result = new ResultFile(t);
         return {
           name: result.name,
           formattedName: result.formattedName

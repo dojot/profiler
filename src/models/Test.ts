@@ -86,8 +86,8 @@ export class Test {
 
   get json() {
     return {
-      //device_ids: this.messages.map(message => `${message.sendOrder} (${message.getTime})`),
-     // delays: this.messages.map(message => message.delay),
+      device_ids: this.messages.map(message => `${message.sendOrder} (${message.getTime})`),
+      delays: this.messages.map(message => message.delay),
       delay_avarage: this.delayAvarage,
       avarage_received_rate: this.averageReceivedRate,
       total_sent_per_second: this.totalSentPerSecond,

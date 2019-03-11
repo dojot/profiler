@@ -27,8 +27,8 @@ export class DBTestDAO {
                   row.username,
                   row.password,
                   row.device,
-                  row.perSecond,
-                  row.totalMessages
+                  row.per_second,
+                  row.total_messages
                 )
               );
             });
@@ -58,8 +58,8 @@ export class DBTestDAO {
                 row.username,
                 row.password,
                 row.device,
-                row.perSecond,
-                row.totalMessages
+                row.per_second,
+                row.total_messages
               );
             });
           }

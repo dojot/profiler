@@ -20,10 +20,14 @@
       ::-webkit-scrollbar { 
         width: 0px!important;
       } 
+      html{
+        font-size: 1rem;
+      }
       body {
         overflow-y:hidden;
       }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   </head>
   <body>
     <div id="app">
@@ -200,18 +204,19 @@
           </div>
         </nav>
       </div>
-
       <div class="row w-100 mt-4">
-        <div class="col-md-3 col-lg-2 offset-md-1">
+        <div class="col-lg-3 col-xl-2 offset-md-1">
           <div class="card text-white bg-primary mx-sm-1 p-3">
             <div class="text-white bg-primary">
               <span class="fa fa-eye"></span>
             </div>
             <div class="text-white text-center mt-3">
-              <h6>Total sent</h6>
+              <h6>Total sent / Rate</h6>
             </div>
             <div class="text-white text-center mt-2">
-              <h3 v-if="!loading" id="sent-messages">{{ sent_messages }}</h3>
+              <h3 v-if="!loading" id="sent-messages">
+                {{ sent_messages }} / {{ total_sent_per_second }}
+              </h3>
               <div v-if="loading" class="text-center">
                 <div class="spinner-border mb-1" role="status">
                   <span class="sr-only">Loading...</span>
@@ -220,13 +225,13 @@
             </div>
           </div>
         </div>
-        <div class="col-md-3 col-lg-2">
+        <div class="col-lg-3 col-xl-2">
           <div class="card text-white bg-info mx-sm-1 p-3">
             <div class="text-white bg-primary">
               <span class="fa fa-eye"></span>
             </div>
             <div class="text-white text-center mt-3">
-              <h6>Total received</h6>
+              <h6>Total received / Rate</h6>
             </div>
             <div class="text-white text-center mt-2">
               <h3 v-if="!loading" id="received-messages">
@@ -240,7 +245,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-3 col-lg-2">
+        <div class="col-lg-3 col-xl-2">
           <div class="card text-white bg-success mx-sm-1 p-3">
             <div class="text-white bg-primary">
               <span class="fa fa-eye"></span>
@@ -258,7 +263,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-3 col-lg-2">
+        <div class="col-lg-3 col-xl-2">
           <div class="card text-white bg-warning mx-sm-1 p-3">
             <div class="text-white bg-primary">
               <span class="fa fa-eye"></span>
@@ -276,7 +281,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-3 col-lg-2">
+        <div class="col-lg-3 col-xl-2">
           <div class="card text-white bg-danger mx-sm-1 p-3">
             <div class="text-white bg-danger">
               <span class="fa fa-eye"></span>
@@ -301,36 +306,6 @@
         <div class="col-md-9">
           <canvas id="delay-chart"></canvas>
         </div>
-      
-      <!-- <div class="col-md-3">
-          <div class="progress">
-              <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-        <table class="table">
-          <tbody>
-            <tr>
-              <td>Total Enviado</td>
-              <td>
-                <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
     </div>
 
     <script
@@ -353,7 +328,6 @@
       integrity="sha256-o8aByMEvaNTcBsw94EfRLbBrJBI+c3mjna/j4LrfyJ8="
       crossorigin="anonymous"
     ></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 
     <script>
       var app = new Vue({
@@ -364,12 +338,14 @@
           delays: [],
           sent_messages: "--",
           received_messages: "--",
+          total_sent_per_second: "--",
           delay_avarage: "--",
           avarage_received_rate: "--",
           standard_derivation: "--",
           out_of_order_messages: "--",
           data_source: "socket",
           file_name: "",
+          filter: " ()",
           running: false,
           loading: false,
           form: {
@@ -390,7 +366,7 @@
               });
             })
             .then(success => console.log("finished"))
-            .catch(error => console.log(error));
+            .catch(error => console.log(error));  
           // getSavedFormData();  
         }
       });
@@ -402,7 +378,7 @@
           labels: app.device_ids,
           datasets: [
             {
-              label: "Messages delay",
+              label: `No data`,
               data: app.delays,
               backgroundColor: "rgba(0, 123, 255, 1)",
               borderWidth: 1,
@@ -539,12 +515,14 @@
         chart.data.labels = app.device_ids;
 
         chart.data.datasets.forEach(dataset => {
+          dataset.label = `Messages delay (${app.data_source})`;
           dataset.data = app.delays;
         });
         chart.update();
       };
 
       const selectDataSource = dataSource => {
+        
         app.data_source = dataSource;
         if (app.file_name) {
           updateResult();
@@ -572,6 +550,7 @@
               app.device_ids = data.device_ids;
               app.delays = data.delays;
               app.delay_avarage = data.delay_avarage;
+              app.total_sent_per_second = data.total_sent_per_second;
               app.avarage_received_rate = data.avarage_received_rate;
               app.standard_derivation = data.standard_derivation;
               app.out_of_order_messages = data.out_of_order_messages;

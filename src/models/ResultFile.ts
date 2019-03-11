@@ -1,17 +1,19 @@
 import * as _ from "lodash";
+import { FullTest } from "./FullTest";
 class ResultFile {
-  private _name: string;
+  
+  private _test: FullTest;
 
-  public constructor(name: string) {
-    this._name = name.trim();
+  public constructor(test: FullTest) {
+    this._test = test;
   }
 
   public get name(): string {
-    return this._name;
+    return this._test.name.trim();
   }
 
   public get formattedName(): string {
-    const data = this._name
+    const data = this.name
       .split(".")[0]
       .split("_")
       .map(n => this.formatNumber(_.toInteger(n)));
