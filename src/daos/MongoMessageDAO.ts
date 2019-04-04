@@ -12,7 +12,7 @@ export class MongoMessageDAO {
       );
       setTimeout(() => {[]
         mongoose
-          .connect(`mongodb:///${host}:27017/device_history`, { useMongoClient: true, poolSize: 1 })
+          .connect(`mongodb://${host}:27017/device_history`, { useMongoClient: true, poolSize: 1 })
           .then(() => {
             const messageModel = mongooseMessage(`${tenant}_${device}`);
             const deviceTimes = messages.map(message => message.deviceTime);
