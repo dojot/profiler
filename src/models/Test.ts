@@ -31,7 +31,7 @@ export class Test {
     }
     return _.round(
       this.messages.map(m => m.delay).reduce((a, b) => a + b) /
-        this.totalMessages,
+      this.totalMessages,
       2
     );
   }
@@ -52,7 +52,7 @@ export class Test {
   get outOfOrderMessages() {
     let total = 0;
     const sendOrder = this.messages.map(m => m.sendOrder);
-    const sendOrdered = this.messages.map(m => m.sendOrder).sort( (a, b) => a - b );
+    const sendOrdered = this.messages.map(m => m.sendOrder).sort((a, b) => a - b);
 
     this.messages.forEach(message => {
       const sendOrderIndex = sendOrder.indexOf(message.sendOrder);
@@ -74,13 +74,13 @@ export class Test {
     return _.round((this.totalMessages / this.totalReceivedTime) * 1000, 2);
   }
 
-  get totalReceivedTime(): number{
+  get totalReceivedTime(): number {
     const firstTime = this.messages[0].getTimestamp;
     const lastTime = this.messages[this.messages.length - 1].getTimestamp;
     return lastTime - firstTime;
   }
 
-  get totalSentPerSecond(): number{
+  get totalSentPerSecond(): number {
     return this._fullTest.perSecond;
   }
 

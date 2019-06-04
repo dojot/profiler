@@ -54,7 +54,7 @@ export abstract class Message {
     return this._totalSentMessages;
   }
 
-  get sendOrder(){
+  get sendOrder() {
     return this._sendOrder;
   }
 

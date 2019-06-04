@@ -1,7 +1,6 @@
 import * as _ from "lodash";
 import { FullTest } from "./FullTest";
 class ResultFile {
-  
   private _test: FullTest;
 
   public constructor(test: FullTest) {

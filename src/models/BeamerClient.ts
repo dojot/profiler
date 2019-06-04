@@ -9,14 +9,13 @@ export class BeamerClient {
       logger.debug(`dns ${test.host} translated to ${ip}`);
       shell.exec(
         `mqtt-beamer ${ip} ${test.tenant} ${test.device} ${
-          test.perSecond
+        test.perSecond
         } ${test.totalMessages}`,
         { async: true },
         () => {
           logger.debug(`mqtt beamer sent all messages`);
         }
       );
-    })
-    
+    });
   }
 }

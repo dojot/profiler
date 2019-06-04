@@ -10,7 +10,7 @@ export class MongoMessageDAO {
       console.log(
         `waiting ${waitingTime / 1000} seconds for mongodb saving data...`
       );
-      setTimeout(() => {[]
+      setTimeout(() => {
         mongoose
           .connect(`mongodb://${host}:27017/device_history`, { useMongoClient: true, poolSize: 1 })
           .then(() => {
@@ -26,19 +26,18 @@ export class MongoMessageDAO {
                   const doc = docs.find(doc => doc.value == message.deviceTime);
                   message.mongoTime = doc.saved_ts;
                 });
-                
+
                 resolve(messages);
                 mongoose.disconnect();
               }).catch(err => {
                 console.log(err.message);
                 reject(err);
-              })
-          })
-          .catch(err => {
+              });
+          }).catch(err => {
             mongoose.disconnect();
             console.log(
               "MongoDB connection error. Please make sure MongoDB is running. " +
-                err
+              err
             );
             reject(err);
           });

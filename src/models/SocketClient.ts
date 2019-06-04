@@ -7,7 +7,7 @@ export class SocketClient {
   private _test: FullTest;
   private _client: SocketIoClient;
 
-  forTest(test: FullTest){
+  forTest(test: FullTest) {
     this._test = test;
     return this;
   }

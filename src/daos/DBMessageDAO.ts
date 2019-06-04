@@ -50,11 +50,11 @@ export class DBMessageDAO {
       messages.forEach(message => {
         insert += `(${message.deviceTime},${message.moscaTime},${
           message.socketTime
-        },${message.mongoTime},${message.sendOrder},${message.total},${
+          },${message.mongoTime},${message.sendOrder},${message.total},${
           message.last
-        },${test.id}),`;
+          },${test.id}),`;
         count++;
-        if(count % 500 == 0){
+        if (count % 500 == 0) {
           logger.debug(`Formatted ${count} messages`);
         }
       });

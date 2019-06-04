@@ -21,7 +21,7 @@ export class MessageProcessor {
     return this;
   }
 
-  withSocket(socket: SocketClient){
+  withSocket(socket: SocketClient) {
     this._socketClient = socket;
     return this;
   }
