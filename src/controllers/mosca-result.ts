@@ -15,8 +15,8 @@ export let create = async (req: Request, res: Response) => {
   const fullTest = await testDAO.byName(fileName);
   const messages = await messageDAO.allByTestName(req.body.fileName);
 
-  const socketMessages = messages.map(m => MoscaMessage.instance(m));
-  res.json(new Test(socketMessages, fullTest).json);
+  const moscaMessages = messages.map(m => MoscaMessage.instance(m));
+  res.json(new Test(moscaMessages, fullTest).json);
   client.end();
 
 };

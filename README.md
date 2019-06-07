@@ -1,32 +1,32 @@
-# dojot performance tool
+# dojot profiler
 
 This service has the purpose of testing the performance of the dojot platform in several scenarios, 
 such as the delay of the message from the time of sending to the reception via socketio, among other scenarios.
 
 ## Installation
 
-This service depends on docker to work. To install it, please run the
-commands below. These have been tested on an ubuntu 18.04 environment (same used when generating)
-the service's docker image.
+This service depends on git, docker and docker-compose to work. After you install them, please run the
+commands below to run the service. These have been tested on an ubuntu 18.04 environment.
 
-To build docker image:
+After downloading the project, go to the root directory:
+
+```shell
+cd dojot-profiler
+```
+
+To update service dependencies:
 
 ```shell
 # you may need sudo for those
 git submodule init && git submodule update
-docker build -t dojo-performance:latest .
 ```
 
-To run in development mode:
+This service run on port 3000. Make sure no other service runs on that port. Then run:
 
 ```shell
 # you may need sudo for those
-docker run -p 3000:3000 dojo-performance:latest
+docker-compose up
 ```
 
-To run in production mode:
 
-```shell
-# you may need sudo for those
-docker run -p 3000:3000 -e "NODE_ENV=production" dojo-performance:latest
-```
+
