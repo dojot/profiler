@@ -5,7 +5,7 @@
 CREATE SEQUENCE public.messages_id_seq;
 
 ALTER SEQUENCE public.messages_id_seq
-    OWNER TO dojot;
+    OWNER to postgres;
     
 CREATE TABLE public.messages
 (
@@ -26,7 +26,7 @@ WITH (
 TABLESPACE pg_default;
 
 ALTER TABLE public.messages
-    OWNER to dojot;
+    OWNER to postgres;
 
 
 -- Table: public.tests
@@ -36,7 +36,7 @@ ALTER TABLE public.messages
 CREATE SEQUENCE public.tests_id_seq;
 
 ALTER SEQUENCE public.tests_id_seq
-    OWNER TO dojot;
+    OWNER to postgres;
 
 CREATE TABLE public.tests
 (
@@ -56,4 +56,4 @@ WITH (
 TABLESPACE pg_default;
 
 ALTER TABLE public.tests
-    OWNER to dojot;    
+    OWNER to postgres;    

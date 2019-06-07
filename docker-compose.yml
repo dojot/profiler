@@ -1,25 +1,28 @@
 version: '3'
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
     environment:
-      PGUSER: dojot
+      PGUSER: postgres
       PGPASSWORD: dojot
       PGDATABASE: dojot
       PGHOST: db
-    command: npm run watch
-    volumes:
-      - .:/usr/src/app/
-      - /usr/src/app/node_modules
+      SESSION_SECRET: QPoRJjUtwCQe1exUX1CFbzGfAH8XjCUN
+    depends_on:
+      - db 
     ports:
       - "3000:3000"
+
   db:
     image: "postgres:11.2-alpine"
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile  
     environment:
-      POSTGRES_USER: dojot
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: dojot
       POSTGRES_DB: dojot
-    ports:
-      - "5432:5432"
-    volumes:
-      - ~/postgres9/:/var/lib/postgresql/data
+
+      

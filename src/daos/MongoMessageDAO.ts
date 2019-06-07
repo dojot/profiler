@@ -1,5 +1,4 @@
 import { FullMessage } from "../models/FullMessage";
-import { MONGODB_URI } from "../util/secrets";
 import mongoose from "mongoose";
 import mongooseMessage from "../models/MongooseMessage";
 
