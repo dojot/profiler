@@ -29,8 +29,7 @@ This service run on port 3000. Make sure no other service runs on that port. The
 docker-compose up
 ```
 
-You must have access to the MongoDB server, because Dojot Profiler will get messages from MongoDB for metrics. Profiler use port 27017
-to connect with MongoDB. You can expose that port in docker-compose.yml of Dojot like that:
+You must have access to the MongoDB server of Dojot, because Dojot Profiler will get messages from MongoDB for metrics. Profiler use port 27017 to connect with MongoDB. You can expose that port in docker-compose.yml of Dojot like that:
 
 ```shell
 # changes in docker-compose.yml
@@ -38,8 +37,17 @@ mongodb:
     ...
     ports:
       - 27017:27017
+    ...
 ```
 
+Your Dojot persister must using this custom image too:
+
+```shell
+# changes in docker-compose.yml
+persister:
+    image: dojot/persister:performance-tests
+    ...
+```
 
 
 ## Using the service
