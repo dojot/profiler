@@ -12,7 +12,7 @@ commands below to run the service. These have been tested on an ubuntu 18.04 env
 After downloading the project, go to the root directory:
 
 ```shell
-cd dojot-profiler
+cd profiler
 ```
 
 To update service dependencies:
@@ -40,12 +40,24 @@ mongodb:
     ...
 ```
 
-Your Dojot persister must using this custom image too:
+Your Dojot persister must using this custom image:
 
 ```shell
 # changes in docker-compose.yml
 persister:
     image: dojot/persister:performance-tests
+    ...
+```
+
+Your must enable unsecured mode on iotagent-mqtt:
+
+```shell
+# changes in docker-compose.yml
+iotagent-mqtt:
+    ...
+    environment:
+      ...
+      ALLOW_UNSECURED_MODE: 'true'
     ...
 ```
 
